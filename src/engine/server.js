@@ -159,7 +159,8 @@ app.post('/api/export/xlsx', (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }) }
 })
 
-app.listen(PORT, async () => {
+console.log(`[engine] starting, binding 0.0.0.0:${PORT} ...`)
+app.listen(PORT, '0.0.0.0', async () => {
   console.log(`[engine] parking-live-engine listening on :${PORT}`)
   // Verify Gemini once so a missing/invalid key is loud, not a silent local fallback.
   const v = await verifyGemini()

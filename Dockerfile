@@ -23,5 +23,7 @@ ENV NODE_ENV=production
 # Render injects PORT; the server already reads process.env.PORT.
 EXPOSE 4000
 
-# Run the engine under a virtual display so Way's headed Cloudflare boot works.
-CMD ["xvfb-run", "-a", "--server-args=-screen 0 1366x768x24", "node", "src/engine/server.js"]
+# Start a background virtual display (for Way's headed Cloudflare browser), then
+# exec Node so it's the main process — binds the port immediately and streams logs
+# straight to the host. If Xvfb fails, the server still runs (Way degrades only).
+CMD ["sh", "-c", "Xvfb :99 -screen 0 1366x768x24 -nolisten tcp >/tmp/xvfb.log 2>&1 & export DISPLAY=:99; exec node src/engine/server.js"]
