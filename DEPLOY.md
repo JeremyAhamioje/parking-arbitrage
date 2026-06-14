@@ -68,7 +68,7 @@ Note the URL, e.g. `https://parking-api.onrender.com`.
 
 New **Web Service** → connect the `parking-arbitrage` repo. Render auto-detects the **Dockerfile**.
 - Environment: **Docker**
-- Instance: **≥ 1 GB RAM** (a Tool-1 fetch launches up to 3 Chromium in parallel — the 512 MB free tier will OOM).
+- Instance: **Standard (2 GB)** for parallel fetches. **To start on Free/512 MB**, set `ENGINE_SEQUENTIAL=1` (runs platforms one at a time, ~1 browser peak) and `WAY_POOL_IDLE_MS=60000` (close Way's browser fast so it doesn't linger in memory). On 512 MB, SpotHero + ParkWhiz are fine; **Way (headed) is the OOM risk** — bump to Standard when you need it reliably. Changing instance type on Render is a dropdown, no redeploy.
 - **Environment variables:**
   ```
   GEMINI_API_KEY          = <your key>
@@ -80,7 +80,7 @@ New **Web Service** → connect the `parking-arbitrage` repo. Render auto-detect
   PARKWHIZ_TZ_OFFSET      = -04:00
   ```
   **Do NOT set `NODE_TLS_REJECT_UNAUTHORIZED=0`** — that was a local sandbox workaround; it disables TLS verification and must not ship.
-  Optional gate/perf knobs: `GEMINI_GATE`, `ENGINE_RETRIES`, `ENGINE_TIMEOUT_WAY`, `WAY_POOL_IDLE_MS` (see README → Scaling & costs).
+  Optional knobs: `ENGINE_SEQUENTIAL=1` (free-tier memory), `GEMINI_GATE`, `ENGINE_RETRIES`, `ENGINE_TIMEOUT_WAY`, `WAY_POOL_IDLE_MS` (see README → Scaling & costs).
 
 Note the URL, e.g. `https://parking-engine.onrender.com`. Check `GET /health` returns `"gemini": { "valid": true }`.
 

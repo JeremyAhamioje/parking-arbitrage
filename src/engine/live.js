@@ -78,10 +78,17 @@ async function orchestrate(mode, query, platformKeys) {
   const keys = (platformKeys && platformKeys.length ? platformKeys : Object.keys(PLATFORMS))
     .filter(k => PLATFORMS[k])
 
-  const settled = await Promise.all(keys.map(k => {
-    const fn = mode === 'event' ? PLATFORMS[k].eventFetch : PLATFORMS[k].dateFetch
-    return runPlatform(k, fn, query)
-  }))
+  const run = k => runPlatform(k, mode === 'event' ? PLATFORMS[k].eventFetch : PLATFORMS[k].dateFetch, query)
+  // ENGINE_SEQUENTIAL=1 → run platforms one at a time (peak ~1 browser, fits a
+  // 512MB / free instance; slower, since platforms no longer overlap). Default:
+  // parallel (faster, wants ~1-2GB).
+  let settled
+  if (process.env.ENGINE_SEQUENTIAL === '1') {
+    settled = []
+    for (const k of keys) settled.push(await run(k))
+  } else {
+    settled = await Promise.all(keys.map(run))
+  }
 
   const rows = []
   const platforms = settled.map(env => {
