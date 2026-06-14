@@ -6,8 +6,9 @@ FROM node:22-bookworm-slim
 
 WORKDIR /app
 
-# xvfb gives headed Chromium a virtual display; ca-certificates for TLS.
-RUN apt-get update && apt-get install -y --no-install-recommends xvfb ca-certificates \
+# xvfb gives headed Chromium a virtual display; xauth is required by xvfb-run;
+# ca-certificates for TLS.
+RUN apt-get update && apt-get install -y --no-install-recommends xvfb xauth ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Install JS deps, then the Chromium build matching the installed Playwright
