@@ -1,0 +1,11 @@
+node_modules
+.git
+.env
+.env.*
+.way-session.json
+.parkwhiz-session.json
+*.log
+npm-debug.log*
+.github
+README.md
+DEPLOY.md

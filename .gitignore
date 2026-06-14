@@ -1,0 +1,6 @@
+node_modules/
+.env
+credentials.json
+*.log
+.way-session.json
+.parkwhiz-session.json

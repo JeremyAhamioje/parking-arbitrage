@@ -1,0 +1,116 @@
+[way:api] 200 https://www.way.com/parking
+[way:debug] passed=true title="Way | Find & Reserve Parking, Car Wash, Roadside Assistance & More" url=https://www.way.com/parking
+[way] Angular booted: true
+[way:api] 200 https://www.way.com/way-search/v2/public/autosuggest/airports
+[way:api] 200 https://www.way.com/way-search/v2/public/autosuggest/ports
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","ports":[{"suggestion":"Port Canaveral, Cape Canaveral, FL","addressDto":{"lat":"28.408949529438928","lon":"-80.61908245725206"},"portCode":"POC"},{"suggestion":"Port of Miami, Miami, FL","addressDto":{"lat":"25.779024193578334","lo
+[way:api] 200 https://www.way.com/assets/images/parking/parking-homepage-sprite.png
+[way:api] 200 https://www.way.com/assets/images/parking/parking-thumbnail-image.jpg
+[way:autosuggest] {"status":200,"body":{"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium, Yankee Stadium","id":15512068,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY","country":"United States","zipCode":"10451","addressString":"1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"},"indexServiceType":"EVENTS","eventTime":"2026-06-15 17:00:00","eventVenueName":"Yankee Stadium","eventVenueId":703713
+[way:location] Classic Tour at Yankee Stadium, Yankee Stadium lat=40.8296426 lon=-73.9261745
+[way] using event time: 2026-06-15 17:00:00 → checkin=2026-06-15 14:00:00 checkout=2026-06-15 19:00:00
+[way] navigating city page: https://www.way.com/parking/city/bronx-ny/?lat=40.8296426&lon=-73.9261745&startTime=2026-06-15%2014%3A00%3A00&endTime=2026-06-15%2019%3A00%3A00&parkingSearchTab=HOURLY
+[way:api] 200 https://www.way.com/way-search/v2/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium, Yankee Stadium","id":15512068,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY",
+[way:api] 200 https://www.way.com/assets/images/parking/airport-parking-bg.jpg
+[way:api] 200 https://www.way.com/assets/images/parking/cruise-parking-bg.png
+[way:api] 200 https://www.way.com/assets/images/parking/cruise-icon.png
+[way:api] 200 https://www.way.com/assets/images/parking/city-parking-bg.jpg
+[way:api] 200 https://www.way.com/parking/city/bronx-ny/?lat=40.8296426&lon=-73.9261745&startTime=2026-06-15%2014%3A00%3A00&endTime=2026-06-15%2019%3A00%3A00&parkingSearchTab=HOURLY
+[way:req] POST https://www.way.com/way-search/v1/public/city-parking/search {"pageName":"bronx-ny/.","paginationDto":{"pageNumber":1,"pageSize":50},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-15 14:00:00","checkout":"2026-06-15 19:00:00"},"pricingType":"Hour
+[way:city-req] https://www.way.com/way-search/v1/public/city-parking/search BODY: {"pageName":"bronx-ny/.","paginationDto":{"pageNumber":1,"pageSize":50},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-15 14:00:00","checkout":"2026-06-15 19:00:00"},"pricingType":"Hourly"}
+[way:req] POST https://www.way.com/way-search/v1/public/city-parking/search {"pageName":"bronx-ny/.","paginationDto":{"pageNumber":1,"pageSize":50},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-15 14:00:00","checkout":"2026-06-15 19:00:00"},"pricingType":"Hour
+[way:city-req] https://www.way.com/way-search/v1/public/city-parking/search BODY: {"pageName":"bronx-ny/.","paginationDto":{"pageNumber":1,"pageSize":50},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-15 14:00:00","checkout":"2026-06-15 19:00:00"},"pricingType":"HourlyDaily"}
+[way:api] 200 https://www.way.com/way-search/v1/public/city-parking/search
+[way:api:body] {"apiStatus":"Success","message":"Search results fetched successfully","last":false,"first":false,"totalPages":0,"size":50,"index":1,"totalRecords":0,"rows":[]}
+[way:city-res] status=200 total=0 rows=0
+[way:req] POST https://www.way.com/way-search/v1/public/city-parking/search {"pageName":"bronx-ny/.","paginationDto":{"pageNumber":1,"pageSize":50},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-15 14:00:00","checkout":"2026-06-15 19:00:00"},"pricingType":"Dail
+[way:city-req] https://www.way.com/way-search/v1/public/city-parking/search BODY: {"pageName":"bronx-ny/.","paginationDto":{"pageNumber":1,"pageSize":50},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-15 14:00:00","checkout":"2026-06-15 19:00:00"},"pricingType":"Daily"}
+[way:api] 400 https://www.way.com/way-search/v1/public/city-parking/search
+[way:api:body] {"type":"about:blank","title":"Bad Request","status":400,"detail":"Failed to read request","instance":"/way-search/v1/public/city-parking/search"}
+[way:city-res] status=400 total=undefined rows=undefined
+[way:req] POST https://www.way.com/way-search/v1/public/city-parking/search {"pageName":"bronx-ny","paginationDto":{"pageNumber":1,"pageSize":50},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-15 14:00:00","checkout":"2026-06-15 19:00:00"},"pricingType":"Hourly
+[way:city-req] https://www.way.com/way-search/v1/public/city-parking/search BODY: {"pageName":"bronx-ny","paginationDto":{"pageNumber":1,"pageSize":50},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-15 14:00:00","checkout":"2026-06-15 19:00:00"},"pricingType":"Hourly"}
+[way:api] 200 https://www.way.com/way-search/v1/public/city-parking/search
+[way:api:body] {"apiStatus":"Success","message":"Search results fetched successfully","last":false,"first":false,"totalPages":0,"size":50,"index":1,"totalRecords":0,"rows":[]}
+[way:city-res] status=200 total=0 rows=0
+[way:req] POST https://www.way.com/way-consumer/v1/public/seo/criteria/search {"criteria":"parking/city/bronx-ny/.","service":"Parking"}
+[way:req] GET https://www.way.com/way-search/v1/public/search/filters/PARKING 
+[way:req] GET https://www.way.com/way-search/v1/public/seo/city//state/average/prices 
+[way:req] GET https://www.way.com/way-search/v2/public/autosuggest/airports 
+[way:direct] pricingType=Hourly pageName=bronx-ny/. total=0 rows=0 status=200
+[way:direct] pricingType=HourlyDaily pageName=bronx-ny/. total=undefined rows=0 status=400
+[way:direct] pricingType=Daily pageName=bronx-ny/. total=0 rows=0 status=200
+[way:direct] pricingType=Hourly pageName=bronx-ny total=4 rows=4 status=200
+[way:direct:data] {"apiStatus":"Success","message":"Search results fetched successfully","last":true,"first":true,"totalPages":1,"size":50,"index":1,"totalRecords":4,"rows":[{"serviceType":"Parking","listingId":9266797,"listingName":"1755 Watson Ave_Watson Ave Garage","lat":"40.8280865","lon":"-73.8676806","minPrice":"13.00","avgRating":"4.5","totalReviews":246,"userFavourite":false,"distance":"1.2","linearDistance
+[way:api] 200 https://www.way.com/way-search/v1/public/city-parking/search
+[way:api:body] {"apiStatus":"Success","message":"Search results fetched successfully","last":true,"first":true,"totalPages":1,"size":50,"index":1,"totalRecords":4,"rows":[{"serviceType":"Parking","listingId":9266797,"listingName":"1755 Watson Ave_Watson Ave Garage","lat":"40.8280865","lon":"-73.8676806","minPrice"
+[way:intercept] 200 https://www.way.com/way-search/v1/public/city-parking/search rows=4
+[way:city-res] status=200 total=4 rows=4
+[way:api] 200 https://www.way.com/way-search/v2/public/autosuggest/airports
+[way:ui] Hourly/Daily tab clicked: true
+[way:api] 200 https://www.way.com/way-search/v1/public/search/filters/PARKING
+[way:api] 404 https://www.way.com/way-search/v1/public/seo/city//state/average/prices
+[way:api:body] {"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource v1/public/seo/city/state/average/prices.","instance":"/way-search/v1/public/seo/city/state/average/prices"}
+[way:venue-links] [{"href":"https://www.way.com/city-parking-fifa-world-cup-2026","text":"Book Parking →"},{"href":"https://www.way.com/monthly-parking-near-me","text":"Monthly Parking"},{"href":"https://www.way.com/parking/garages","text":"Parking Garages"},{"href":"https://www.way.com/parking/lots","text":"Parking Lots"},{"href":"https://www.way.com/auto-insurance#parking-accident-insurance","text":"Parking Lot Accident Insurance"},{"href":"https://www.way.com/blog/all-about-parallel-parking/","text":"Parallel ParkingLearn the techniques of parallel parking wit"},{"href":"https://www.way.com/blog/when-and-how-to-appeal-parking-tickets/","text":"Parking TicketUnderstand your options when dealing with a pa"},{"href":"https://www.way.com/blog/handicap-parking-spot/","text":"Handicap ParkingFind out who quali
+[way:ui] matched venue link: undefined
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Y","serviceType":"PARKING"}
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Ya","serviceType":"PARKING"}
+[way:req] POST https://www.way.com/way-consumer/v1/metadata/public/timezones {"zipCodes":["10462"],"timestamp":0}
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yan","serviceType":"PARKING"}
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yank","serviceType":"PARKING"}
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yanke","serviceType":"PARKING"}
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yankee","serviceType":"PARKING"}
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yankee ","serviceType":"PARKING"}
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yankee S","serviceType":"PARKING"}
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yankee St","serviceType":"PARKING"}
+[way:req] POST https://www.way.com/way-search/v1/public/city-parking/search {"pageName":"bronx-ny/.","paginationDto":{"pageNumber":1,"pageSize":12},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-12 20:15:00","checkout":"2026-06-12 23:15:00"},"pricingType":"Hour
+[way:city-req] https://www.way.com/way-search/v1/public/city-parking/search BODY: {"pageName":"bronx-ny/.","paginationDto":{"pageNumber":1,"pageSize":12},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-12 20:15:00","checkout":"2026-06-12 23:15:00"},"pricingType":"Hourly","showTotalPriceWithTaxes":false}
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Yakima Valley Pippins vs. Kelowna Falcons","id":14619566,"addressDto":{"addressLine1":"null","addressLine2":"","aptNo":"","lat":"46.5914874","lon":"-120.4855649","city":"Yakima","state":"Washington","state
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yankee Sta","serviceType":"PARKING"}
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium","id":15512068,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY"
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yankee Stad","serviceType":"PARKING"}
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium","id":15512068,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY"
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yankee Stadi","serviceType":"PARKING"}
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium","id":15512068,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY"
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yankee Stadiu","serviceType":"PARKING"}
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium","id":15512068,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY"
+[way:ui] typed "Yankee Stadium" (autosuggest fallback)
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yankee Stadium","serviceType":"PARKING"}
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium","id":15512068,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY"
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium","id":15307794,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY"
+[way:req] POST https://www.way.com/way-search/v1/public/city-parking/search {"pageName":"bronx-ny/.","paginationDto":{"pageNumber":1,"pageSize":500},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-12 20:15:00","checkout":"2026-06-12 23:15:00"},"pricingType":"Hou
+[way:city-req] https://www.way.com/way-search/v1/public/city-parking/search BODY: {"pageName":"bronx-ny/.","paginationDto":{"pageNumber":1,"pageSize":500},"searchType":"PARKING","parkingFilterDto":{"checkin":"2026-06-12 20:15:00","checkout":"2026-06-12 23:15:00"},"pricingType":"Hourly","showTotalPriceWithTaxes":false}
+[way:api] 200 https://www.way.com/way-search/v1/public/city-parking/search
+[way:api:body] {"apiStatus":"Success","message":"Search results fetched successfully","last":false,"first":false,"totalPages":0,"size":12,"index":1,"totalRecords":0,"rows":[]}
+[way:city-res] status=200 total=0 rows=0
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium","id":15512068,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY"
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium","id":15512036,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY"
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium","id":15512036,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY"
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api:body] {"apiStatus":"Success","message":"Suggestions fetched successfully","response":[{"suggestion":"Classic Tour at Yankee Stadium","id":15512068,"addressDto":{"addressLine1":"1 E 161st St, Bronx, NY 10451, United States","lat":"40.8296426","lon":"-73.9261745","city":"Bronx","state":"NY","stateCode":"NY"
+[way:api] 200 https://www.way.com/way-search/v1/public/city-parking/search
+[way:api:body] {"apiStatus":"Success","message":"Search results fetched successfully","last":false,"first":false,"totalPages":0,"size":500,"index":1,"totalRecords":0,"rows":[]}
+[way:city-res] status=200 total=0 rows=0
+[way:ui:sugg] [{"tag":"LI","class":"","text":"Home","href":""},{"tag":"LI","class":"","text":"Parking","href":""},{"tag":"LI","class":"","text":"City","href":""},{"tag":"LI","class":"","text":"Reserve Airport Parking","href":""},{"tag":"LI","class":"","text":"Air Travel Guides","href":""},{"tag":"LI","class":"","text":"PHL Airport Parking","href":""},{"tag":"LI","class":"","text":"LAX Parking","href":""},{"tag":"LI","class":"hidden-item","text":"Newark Airport Parking","href":""},{"tag":"LI","class":"hidden-item","text":"Seatac Airport Parking","href":""},{"tag":"LI","class":"hidden-item","text":"JFK Airpor
+[way:req] POST https://www.way.com/way-search/v1/public/autosuggest {"searchString":"Yankee Stadium","serviceType":"PARKING"}
+[way:ui] pressed Enter (no suggestion matched)
+[way:api] 200 https://www.way.com/way-search/v1/public/autosuggest
+[way:api] 204 https://bat.bing.com/action/0?ti=5901879&Ver=2&mid=7d2d3e69-76ce-49ef-8ede-1f0330285c16&bo=1&sid=4e471e0066be11f1a568ad4f75ad5218&vid=4e47850066be11f1bfcb9114345e5477&vids=1&msclkid=N&uach=pv%3D10.0&pi=918639831&lg=en-US&sw=1366&sh=768&sc=32&tl=Parking%20Spot%20Near%20.&kw=.%20Parking%20Spots%20Nearby,%20Cheap%20Parking%20Spots%20Near%20.,%20Street%20Parking%20Spots%20Near%20.,%20Parking%20Spots%20Near%20.,%20Best%20Parking%20Spots%20in%20.,%20Affordable%20Parking%20Spots%20Near%20.&p=https%3A%2F%2Fwww.way.com%2Fparking%2Fcity%2Fbronx-ny%2F%3Flat%3D40.8296426%26lon%3D-73.9261745%26startTime%3D2026-06-15%252014%3A00%3A00%26endTime%3D2026-06-15%252019%3A00%3A00%26parkingSearchTab%3DHOURLY&r=&lt=15058&evt=pageLoad&sv=2&cdb=AQAQ&rn=741931
+[way:api] 200 https://track-na2.hubspot.com/__ptq.gif?k=1&sd=1366x768&cd=32-bit&cs=UTF-8&ln=en-us&v=1.1&a=244193529&rcu=https%3A%2F%2Fwww.way.com%2Fparking%2Fcity%2Fbronx-ny&pu=https%3A%2F%2Fwww.way.com%2Fparking%2Fcity%2Fbronx-ny%2F%3Flat%3D40.8296426%26lon%3D-73.9261745%26startTime%3D2026-06-15%252014%3A00%3A00%26endTime%3D2026-06-15%252019%3A00%3A00%26parkingSearchTab%3DHOURLY&t=Parking+Spot+Near+.&cts=1781310303573&vi=f49515a04dbfeed388df098dd0d1f626&nc=true&u=247850584.f49515a04dbfeed388df098dd0d1f626.1781310303565.1781310303565.1781310303565.1&b=247850584.1.1781310303566&cc=15
+[way:ui] final URL: https://www.way.com/parking/city/bronx-ny/?lat=40.8296426&lon=-73.9261745&startTime=2026-06-15%2014:00:00&endTime=2026-06-15%2019:00:00&parkingSearchTab=HOURLY
+[way:rows] 4 lots from intercepted response
+[way:row0] {"serviceType":"Parking","listingId":9266797,"listingName":"1755 Watson Ave_Watson Ave Garage","lat":"40.8280865","lon":"-73.8676806","minPrice":"13.00","avgRating":"4.5","totalReviews":246,"userFavourite":false,"distance":"1.2","linearDistance":1.16,"distanceMetric":"MILES","images":[{"imagePath":"listing_image/Listing_1859128_img","thumbImagePath":"listing_thumbnail/Listing_1859128_thmb","isDefa

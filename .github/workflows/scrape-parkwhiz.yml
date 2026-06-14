@@ -1,0 +1,32 @@
+name: Scrape ParkWhiz
+
+# ParkWhiz runs on the DATACENTER proxy pool (separate, larger allowance than the
+# residential one Way uses), so hourly is fine on bandwidth. Runtime is the main
+# cost — it launches a browser per venue (~10-20 min for 50). On a PRIVATE repo,
+# hourly will use a lot of your Actions minutes; widen the cron if needed.
+on:
+  schedule:
+    - cron: '0 * * * *'   # top of every hour
+  workflow_dispatch:
+
+jobs:
+  parkwhiz:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - name: Scrape ParkWhiz (50 venues)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          PARKWHIZ_PROXY_URLS: ${{ secrets.PARKWHIZ_PROXY_URLS }}
+          PARKWHIZ_TZ_OFFSET: ${{ secrets.PARKWHIZ_TZ_OFFSET }}
+        run: npm run scrape:parkwhiz

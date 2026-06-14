@@ -1,0 +1,366 @@
+{
+  "1": {
+    "lat": 48.8636341,
+    "lon": 2.276485
+  },
+  "Madison square garden - new york": {
+    "lat": 40.7505129,
+    "lon": -73.9935159,
+    "spotheroDestinationId": 745
+  },
+  "Crypto.com Arena — Los Angeles, CA": {
+    "lat": 34.0429979,
+    "lon": -118.2671352,
+    "spotheroDestinationId": 50387
+  },
+  "United Center — Chicago, IL": {
+    "lat": 41.8806831,
+    "lon": -87.6741851,
+    "spotheroDestinationId": 2
+  },
+  "Chase Center — San Francisco, CA": {
+    "lat": 37.7679001,
+    "lon": -122.3874223,
+    "spotheroDestinationId": 74629
+  },
+  "TD Garden — Boston, MA": {
+    "lat": 42.3662986,
+    "lon": -71.0621622,
+    "spotheroDestinationId": 727
+  },
+  "Barclays Center — Brooklyn, NY": {
+    "lat": 40.6825106,
+    "lon": -73.9752519,
+    "spotheroDestinationId": 862
+  },
+  "Amalie Arena — Tampa, FL": {
+    "lat": 27.942704,
+    "lon": -82.4518903,
+    "spotheroDestinationId": 72705
+  },
+  "Ball Arena — Denver, CO": {
+    "lat": 39.7486838,
+    "lon": -105.007544,
+    "spotheroDestinationId": 47314
+  },
+  "Kaseya Center — Miami, FL": {
+    "lat": 25.7813595,
+    "lon": -80.1879435,
+    "spotheroDestinationId": 66261
+  },
+  "Hollywood Bowl — Los Angeles, CA": {
+    "lat": 34.1121836,
+    "lon": -118.3392774,
+    "spotheroDestinationId": 61377
+  },
+  "Red Rocks Amphitheatre — Morrison, CO": {
+    "lat": 39.6653917,
+    "lon": -105.2057171
+  },
+  "Radio City Music Hall — New York, NY": {
+    "lat": 40.7598116,
+    "lon": -73.9792791,
+    "spotheroDestinationId": 803
+  },
+  "The Fillmore — San Francisco, CA": {
+    "lat": 37.7840838,
+    "lon": -122.433171,
+    "spotheroDestinationId": 49019
+  },
+  "Bridgestone Arena — Nashville, TN": {
+    "lat": 36.1589806,
+    "lon": -86.7783819,
+    "spotheroDestinationId": 66965
+  },
+  "Smoothie King Center — New Orleans, LA": {
+    "lat": 29.9490393,
+    "lon": -90.082069,
+    "spotheroDestinationId": 47436
+  },
+  "Fiserv Forum — Milwaukee, WI": {
+    "lat": 43.0450096,
+    "lon": -87.9174871,
+    "spotheroDestinationId": 571
+  },
+  "Nationwide Arena — Columbus, OH": {
+    "lat": 39.9691873,
+    "lon": -83.00608,
+    "spotheroDestinationId": 72139
+  },
+  "PPG Paints Arena — Pittsburgh, PA": {
+    "lat": 40.4395912,
+    "lon": -79.9895408,
+    "spotheroDestinationId": 72899
+  },
+  "Rocket Mortgage FieldHouse — Cleveland, OH": {
+    "lat": 41.4966862,
+    "lon": -81.6885754,
+    "spotheroDestinationId": 79054
+  },
+  "Carnegie Hall — New York, NY": {
+    "lat": 40.76503,
+    "lon": -73.9798868,
+    "spotheroDestinationId": 804
+  },
+  "Auditorium Theatre — Chicago, IL": {
+    "lat": 41.8760769,
+    "lon": -87.6252708,
+    "spotheroDestinationId": 5096
+  },
+  "Kennedy Center — Washington, D.C.": {
+    "lat": 38.8957359,
+    "lon": -77.0557586,
+    "spotheroDestinationId": 610
+  },
+  "Lincoln Center — New York, NY": {
+    "lat": 40.7728685,
+    "lon": -73.9830572,
+    "spotheroDestinationId": 799
+  },
+  "Fox Theatre — Atlanta, GA": {
+    "lat": 33.7726429,
+    "lon": -84.3855618,
+    "spotheroDestinationId": 71679
+  },
+  "Dolby Theatre — Los Angeles, CA": {
+    "lat": 34.1026902,
+    "lon": -118.3404676,
+    "spotheroDestinationId": 62955
+  },
+  "Chicago Theatre — Chicago, IL": {
+    "lat": 41.8854968,
+    "lon": -87.6271883,
+    "spotheroDestinationId": 25
+  },
+  "Wang Theatre — Boston, MA": {
+    "lat": 42.3503884,
+    "lon": -71.0643886,
+    "spotheroDestinationId": 778
+  },
+  "Orpheum Theatre — Los Angeles, CA": {
+    "lat": 34.0427183,
+    "lon": -118.2553893,
+    "spotheroDestinationId": 62454
+  },
+  "Paramount Theatre — Oakland, CA": {
+    "lat": 37.8098684,
+    "lon": -122.268667,
+    "spotheroDestinationId": 56106
+  },
+  "Javits Center — New York, NY": {
+    "lat": 40.7583595,
+    "lon": -74.0021206,
+    "spotheroDestinationId": 1187
+  },
+  "McCormick Place — Chicago, IL": {
+    "lat": 41.851689,
+    "lon": -87.6164754,
+    "spotheroDestinationId": 397
+  },
+  "Las Vegas Convention Center — Las Vegas, NV": {
+    "lat": 36.1194215,
+    "lon": -115.1742536
+  },
+  "Orange County Convention Center — Orlando, FL": {
+    "lat": 28.4247237,
+    "lon": -81.4691963,
+    "spotheroDestinationId": 78848
+  },
+  "George R. Brown Convention Center — Houston, TX": {
+    "lat": 29.7517932,
+    "lon": -95.3581139,
+    "spotheroDestinationId": 71696
+  },
+  "Walter E. Washington Convention Center — Washington, D.C.": {
+    "lat": 38.9051269,
+    "lon": -77.0229544,
+    "spotheroDestinationId": 615
+  },
+  "Moscone Center — San Francisco, CA": {
+    "lat": 37.7843988,
+    "lon": -122.4005843,
+    "spotheroDestinationId": 49052
+  },
+  "Kay Bailey Hutchison Convention Center — Dallas, TX": {
+    "lat": 32.7739782,
+    "lon": -96.8017506,
+    "spotheroDestinationId": 71556
+  },
+  "Pennsylvania Convention Center — Philadelphia, PA": {
+    "lat": 39.955107,
+    "lon": -75.1602358,
+    "spotheroDestinationId": 1804
+  },
+  "Ernest N. Morial Convention Center — New Orleans, LA": {
+    "lat": 29.9395386,
+    "lon": -90.0631825,
+    "spotheroDestinationId": 47459
+  },
+  "SoFi Stadium — Inglewood, CA": {
+    "lat": 33.9534074,
+    "lon": -118.3390098,
+    "spotheroDestinationId": 79050
+  },
+  "AT&T Stadium — Arlington, TX": {
+    "lat": 32.7478503,
+    "lon": -97.0928337,
+    "spotheroDestinationId": 71545
+  },
+  "MetLife Stadium — East Rutherford, NJ": {
+    "lat": 40.8135071,
+    "lon": -74.0743442,
+    "spotheroDestinationId": 23657
+  },
+  "Allegiant Stadium — Las Vegas, NV": {
+    "lat": 36.0907359,
+    "lon": -115.1833303,
+    "spotheroDestinationId": 79221
+  },
+  "Levi's Stadium — Santa Clara, CA": {
+    "lat": 37.4029867,
+    "lon": -121.9696489,
+    "spotheroDestinationId": 71686
+  },
+  "Soldier Field — Chicago, IL": {
+    "lat": 41.8623356,
+    "lon": -87.6176477,
+    "spotheroDestinationId": 4
+  },
+  "Fenway Park — Boston, MA": {
+    "lat": 42.3464614,
+    "lon": -71.0970999,
+    "spotheroDestinationId": 722
+  },
+  "Wrigley Field — Chicago, IL": {
+    "lat": 41.9481846,
+    "lon": -87.655559,
+    "spotheroDestinationId": 1
+  },
+  "Yankee Stadium — New York, NY": {
+    "lat": 40.8295828,
+    "lon": -73.9265212,
+    "spotheroDestinationId": 43
+  },
+  "Dodger Stadium — Los Angeles, CA": {
+    "lat": 34.0736255,
+    "lon": -118.2398452,
+    "spotheroDestinationId": 62920
+  },
+  "Oracle Park — San Francisco, CA": {
+    "lat": 37.7786059,
+    "lon": -122.3894716,
+    "spotheroDestinationId": 48591
+  },
+  "Madison square garden": {
+    "lat": 40.7505129,
+    "lon": -73.9935159
+  },
+  "8 E. 33rd St.": {
+    "lat": 40.3927513,
+    "lon": -104.7326076
+  },
+  "51 W. 22nd St.": {
+    "lat": 40.83225,
+    "lon": -73.4168181
+  },
+  "101 W. 23rd St": {
+    "lat": 34.1468652,
+    "lon": -117.6516886
+  },
+  "124 W 31st St": {
+    "lat": 43.2411029,
+    "lon": -79.9092887
+  },
+  "136 W. 40th St.": {
+    "lat": 47.6557385,
+    "lon": -122.3587914
+  },
+  "143-145 W. 40th St.": {
+    "lat": 40.7546314,
+    "lon": -73.9873149
+  },
+  "148 W 31st St": {
+    "lat": 47.6394726,
+    "lon": -122.1428445
+  },
+  "170 W. 23rd St.": {
+    "lat": 43.23521031111111,
+    "lon": -79.90368467777778
+  },
+  "220 W 26th St": {
+    "lat": 47.7993745,
+    "lon": -122.1994005
+  },
+  "235 W. 22nd St.": {
+    "lat": 38.9443958,
+    "lon": -95.238749
+  },
+  "249-253 W. 43rd St.": {
+    "lat": 41.8162078,
+    "lon": -87.6330553
+  },
+  "272 West 34th St": {
+    "lat": 25.8525669,
+    "lon": -80.2879237
+  },
+  "333 W. 26th St": {
+    "lat": 39.8041004,
+    "lon": -86.164231
+  },
+  "350 W. 42nd St.": {
+    "lat": 40.7578472,
+    "lon": -73.9922301
+  },
+  "355 W. 34th St.": {
+    "lat": 34.2476164,
+    "lon": -87.611869
+  },
+  "404 W. 37th St.": {
+    "lat": 40.755357,
+    "lon": -73.9953396
+  },
+  "450 W. 38th St": {
+    "lat": 25.8563164,
+    "lon": -80.2915842
+  },
+  "452 10th Ave.": {
+    "lat": 44.8837525,
+    "lon": -93.0465159
+  },
+  "750 6th Ave. (77 W. 24th St.)": {
+    "lat": 45.5138874,
+    "lon": -122.9577637
+  },
+  "Impark (77 W. 24th St.)": {
+    "lat": 41.2231821,
+    "lon": -111.997609
+  },
+  "LAZ Parking (101 W. 23rd St.)": {
+    "lat": 53.2627443,
+    "lon": 14.4911497
+  },
+  "One Penn Plaza (272 W. 34th St.)": {
+    "lat": 40.7521775,
+    "lon": -73.9926867
+  },
+  "295 Northern Ave.- 0.1 miles away": {
+    "lat": 14.6512387,
+    "lon": 120.994653
+  },
+  "606 Congress St.- 0.2 miles away": {
+    "lat": 42.0619607,
+    "lon": -88.0493713
+  },
+  "12 Drydock Ave.- 0.3 miles away": {
+    "lat": 14.6018058,
+    "lon": -90.5346505
+  },
+  "450 Summer St.- 0.4 miles away": {
+    "lat": 41.5889381,
+    "lon": -72.8917882
+  },
+  "Madison Square Garden": {
+    "lat": 40.7505129,
+    "lon": -73.9935159
+  }
+}

@@ -1,0 +1,29 @@
+name: Scrape SpotHero
+
+# SpotHero uses NO proxy and is quick — hourly is cheap. Note: GitHub's runner is
+# an Azure datacenter IP; if SpotHero ever rate-limits it, route through a proxy.
+on:
+  schedule:
+    - cron: '0 * * * *'   # top of every hour
+  workflow_dispatch:        # manual run from the Actions tab
+
+jobs:
+  spothero:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - name: Scrape SpotHero (50 venues)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+        run: node src/index.js

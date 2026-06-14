@@ -1,0 +1,29 @@
+{
+  "name": "parking-arbitrage",
+  "version": "1.0.0",
+  "description": "Automated parking spot price scraper for arbitrage workflow",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node src/index.js --test",
+    "scrape:way": "node src/scrape-way.js",
+    "scrape:way:prod": "xvfb-run --auto-servernum --server-args='-screen 0 1366x768x24' node src/scrape-way.js",
+    "scrape:parkwhiz": "node src/scrape-parkwhiz.js",
+    "engine": "node src/engine/server.js",
+    "check:way": "node src/scrapers/way.js",
+    "check:parkwhiz": "node src/scrapers/parkwhiz.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.107.0",
+    "cors": "^2.8.6",
+    "dotenv": "^16.0.0",
+    "express": "^5.2.1",
+    "googleapis": "^140.0.1",
+    "multer": "^2.1.1",
+    "playwright": "^1.44.0",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "xlsx": "^0.18.5"
+  }
+}

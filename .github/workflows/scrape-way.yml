@@ -1,0 +1,34 @@
+name: Scrape Way
+
+# Way uses the RESIDENTIAL proxy (metered — ~1 GB/mo on the free Webshare tier).
+# Each run boots the way.com SPA through residential, so hourly (~24/day) would
+# blow the cap (~3 GB/mo). Every 6 hours keeps it comfortably under. To go hourly,
+# change the cron to '0 * * * *' AND upgrade your residential bandwidth.
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # every 6 hours (residential bandwidth)
+  workflow_dispatch:
+
+jobs:
+  way:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - run: sudo apt-get update && sudo apt-get install -y xvfb   # headed Chromium needs a virtual display for Cloudflare
+      - name: Scrape Way (50 venues, xvfb + residential proxy)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          WAY_PROXY_URL: ${{ secrets.WAY_PROXY_URL }}
+          RESIDENTIAL_PROXY_URL: ${{ secrets.RESIDENTIAL_PROXY_URL }}
+          WAY_PROXY_STICKY: '1'
+        run: npm run scrape:way:prod

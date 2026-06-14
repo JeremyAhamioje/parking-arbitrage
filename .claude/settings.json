@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Job)",
+      "PowerShell(Receive-Job -Keep)",
+      "Bash(node --check src/db.js)",
+      "Bash(node --check src/index.js)",
+      "Bash(node --check backfill-facility-stats.js)",
+      "Bash(node --check src/server.js)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

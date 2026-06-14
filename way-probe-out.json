@@ -1,0 +1,3341 @@
+[way] scraping "Yankee Stadium" (via proxy)
+{
+  "source": "way.com",
+  "address": "Yankee Stadium",
+  "status": "ok",
+  "listings": [
+    {
+      "name": "?",
+      "price": "13.00",
+      "currency": "USD",
+      "distance": "1.2",
+      "rating": null,
+      "lat": "40.8280865",
+      "lon": null,
+      "address": {
+        "addressLine1": "1755 Watson Ave",
+        "lat": "40.8280865",
+        "lon": "-73.8676806",
+        "city": "The Bronx",
+        "state": "New York",
+        "stateCode": "NY",
+        "country": "United States",
+        "zipCode": "10472",
+        "addressString": "1755 Watson Ave, The Bronx, New York, NY, United States, 10472"
+      },
+      "lotId": null,
+      "raw": {
+        "serviceType": "Parking",
+        "listingId": 9266797,
+        "listingName": "1755 Watson Ave_Watson Ave Garage",
+        "lat": "40.8280865",
+        "lon": "-73.8676806",
+        "minPrice": "13.00",
+        "avgRating": "4.5",
+        "totalReviews": 246,
+        "userFavourite": false,
+        "distance": "1.2",
+        "linearDistance": 1.16,
+        "distanceMetric": "MILES",
+        "images": [
+          {
+            "imagePath": "listing_image/Listing_1859128_img",
+            "thumbImagePath": "listing_thumbnail/Listing_1859128_thmb",
+            "isDefault": "Yes",
+            "imageIdFromPath": "1859128"
+          }
+        ],
+        "address": {
+          "addressLine1": "1755 Watson Ave",
+          "lat": "40.8280865",
+          "lon": "-73.8676806",
+          "city": "The Bronx",
+          "state": "New York",
+          "stateCode": "NY",
+          "country": "United States",
+          "zipCode": "10472",
+          "addressString": "1755 Watson Ave, The Bronx, New York, NY, United States, 10472"
+        },
+        "currency": "$",
+        "availability": true,
+        "totalPrice": 13,
+        "totalPriceWithTax": 14.74,
+        "totalPriceSplit": [
+          {
+            "name": "Subtotal",
+            "value": 13
+          },
+          {
+            "name": "Sales Tax",
+            "value": 1.35
+          },
+          {
+            "name": "Service Fee",
+            "value": 0.39
+          }
+        ],
+        "dealListing": false,
+        "bookingCount": 2,
+        "liveShuttleTracking": false,
+        "shuttleService": false,
+        "parkingType": "Covered Valet - 24/7 + Standard Vehicle",
+        "pricingType": "Hourly",
+        "pricingTypeId": 3,
+        "childListingId": 9266802,
+        "partialPaymentLot": false,
+        "parkingPassLot": false,
+        "parkingFreeCancel": true,
+        "parkingLotNew": false,
+        "seoListing": false,
+        "bookable": true,
+        "popular": false,
+        "bestSeller": false,
+        "sellingFast": false,
+        "favouriteTag": false,
+        "lightningDeal": false,
+        "zone": false,
+        "zoneExtendable": false,
+        "wayplusBundleListing": false,
+        "promoCodeApplicable": false
+      }
+    },
+    {
+      "name": "?",
+      "price": "19.00",
+      "currency": "USD",
+      "distance": "1.3",
+      "rating": null,
+      "lat": "40.8275582",
+      "lon": null,
+      "address": {
+        "addressLine1": "2070 Chatterton Avenue",
+        "lat": "40.8275582",
+        "lon": "-73.85389219999999",
+        "city": "The Bronx",
+        "state": "New York",
+        "stateCode": "NY",
+        "country": "United States",
+        "zipCode": "10472",
+        "addressString": "2070 Chatterton Avenue, The Bronx, New York, NY, United States, 10472"
+      },
+      "lotId": null,
+      "raw": {
+        "serviceType": "Parking",
+        "listingId": 15481594,
+        "listingName": "Chatterton Parking Corp. 2070 Chatterton Parking",
+        "lat": "40.8275582",
+        "lon": "-73.85389219999999",
+        "minPrice": "19.00",
+        "avgRating": "4.5",
+        "totalReviews": 157,
+        "userFavourite": false,
+        "distance": "1.3",
+        "linearDistance": 1.32,
+        "distanceMetric": "MILES",
+        "images": [
+          {
+            "imagePath": "listing_image/Listing_1900011_img",
+            "thumbImagePath": "listing_thumbnail/Listing_1900011_thmb",
+            "isDefault": "Yes",
+            "imageIdFromPath": "1900011"
+          }
+        ],
+        "address": {
+          "addressLine1": "2070 Chatterton Avenue",
+          "lat": "40.8275582",
+          "lon": "-73.85389219999999",
+          "city": "The Bronx",
+          "state": "New York",
+          "stateCode": "NY",
+          "country": "United States",
+          "zipCode": "10472",
+          "addressString": "2070 Chatterton Avenue, The Bronx, New York, NY, United States, 10472"
+        },
+        "currency": "$",
+        "availability": true,
+        "totalPrice": 19,
+        "totalPriceWithTax": 19,
+        "totalPriceSplit": [
+          {
+            "name": "Subtotal",
+            "value": 19
+          }
+        ],
+        "dealListing": false,
+        "bookingCount": 2,
+        "liveShuttleTracking": false,
+        "shuttleService": false,
+        "parkingType": "Outdoor Valet",
+        "pricingType": "Hourly",
+        "pricingTypeId": 3,
+        "childListingId": 15481595,
+        "partialPaymentLot": false,
+        "parkingPassLot": false,
+        "parkingFreeCancel": true,
+        "parkingLotNew": false,
+        "seoListing": false,
+        "bookable": true,
+        "popular": false,
+        "bestSeller": false,
+        "sellingFast": false,
+        "favouriteTag": false,
+        "lightningDeal": false,
+        "zone": false,
+        "zoneExtendable": false,
+        "wayplusBundleListing": false,
+        "promoCodeApplicable": false
+      }
+    },
+    {
+      "name": "?",
+      "price": "17.00",
+      "currency": "USD",
+      "distance": "1.7",
+      "rating": null,
+      "lat": "40.8595002",
+      "lon": null,
+      "address": {
+        "addressLine1": "450 E 189th St",
+        "lat": "40.8595002",
+        "lon": "-73.8901929",
+        "city": "The Bronx",
+        "state": "New York",
+        "stateCode": "NY",
+        "country": "United States",
+        "zipCode": "10458",
+        "addressString": "450 E 189th St, The Bronx, New York, NY, United States, 10458"
+      },
+      "lotId": null,
+      "raw": {
+        "serviceType": "Parking",
+        "listingId": 9388548,
+        "listingName": "One Fordham Plaza Garage_450 East 189th St Parking",
+        "lat": "40.8595002",
+        "lon": "-73.8901929",
+        "minPrice": "17.00",
+        "avgRating": "4.4",
+        "totalReviews": 143,
+        "userFavourite": false,
+        "distance": "1.7",
+        "linearDistance": 1.67,
+        "distanceMetric": "MILES",
+        "images": [
+          {
+            "imagePath": "listing_image/Listing_1860260_img",
+            "thumbImagePath": "listing_thumbnail/Listing_1860260_thmb",
+            "isDefault": "Yes",
+            "imageIdFromPath": "1860260"
+          }
+        ],
+        "address": {
+          "addressLine1": "450 E 189th St",
+          "lat": "40.8595002",
+          "lon": "-73.8901929",
+          "city": "The Bronx",
+          "state": "New York",
+          "stateCode": "NY",
+          "country": "United States",
+          "zipCode": "10458",
+          "addressString": "450 E 189th St, The Bronx, New York, NY, United States, 10458"
+        },
+        "currency": "$",
+        "availability": true,
+        "totalPrice": 17,
+        "totalPriceWithTax": 17.51,
+        "totalPriceSplit": [
+          {
+            "name": "Subtotal",
+            "value": 17
+          },
+          {
+            "name": "Service Fee",
+            "value": 0.51
+          }
+        ],
+        "dealListing": false,
+        "bookingCount": 2,
+        "liveShuttleTracking": false,
+        "shuttleService": false,
+        "parkingType": "Covered Self Park",
+        "pricingType": "Hourly",
+        "pricingTypeId": 3,
+        "childListingId": 9388549,
+        "partialPaymentLot": false,
+        "parkingPassLot": false,
+        "parkingFreeCancel": true,
+        "parkingLotNew": false,
+        "seoListing": false,
+        "bookable": true,
+        "popular": false,
+        "bestSeller": false,
+        "sellingFast": false,
+        "favouriteTag": false,
+        "lightningDeal": false,
+        "zone": false,
+        "zoneExtendable": false,
+        "wayplusBundleListing": false,
+        "promoCodeApplicable": false
+      }
+    },
+    {
+      "name": "?",
+      "price": "14.00",
+      "currency": "USD",
+      "distance": "1.7",
+      "rating": null,
+      "lat": "40.846089",
+      "lon": null,
+      "address": {
+        "addressLine1": "1880 Bathgate Ave",
+        "lat": "40.846089",
+        "lon": "-73.8971719",
+        "city": "The Bronx",
+        "state": "New York",
+        "stateCode": "NY",
+        "country": "United States",
+        "zipCode": "10457",
+        "addressString": "1880 Bathgate Ave, The Bronx, New York, NY, United States, 10457"
+      },
+      "lotId": null,
+      "raw": {
+        "serviceType": "Parking",
+        "listingId": 9250521,
+        "listingName": "Bathgate Garage Parking",
+        "lat": "40.846089",
+        "lon": "-73.8971719",
+        "minPrice": "14.00",
+        "avgRating": "4.6",
+        "totalReviews": 183,
+        "userFavourite": false,
+        "distance": "1.7",
+        "linearDistance": 1.69,
+        "distanceMetric": "MILES",
+        "images": [
+          {
+            "imagePath": "listing_image/Listing_1856456_img",
+            "thumbImagePath": "listing_thumbnail/Listing_1856456_thmb",
+            "isDefault": "Yes",
+            "imageIdFromPath": "1856456"
+          }
+        ],
+        "address": {
+          "addressLine1": "1880 Bathgate Ave",
+          "lat": "40.846089",
+          "lon": "-73.8971719",
+          "city": "The Bronx",
+          "state": "New York",
+          "stateCode": "NY",
+          "country": "United States",
+          "zipCode": "10457",
+          "addressString": "1880 Bathgate Ave, The Bronx, New York, NY, United States, 10457"
+        },
+        "currency": "$",
+        "availability": true,
+        "totalPrice": 14,
+        "totalPriceWithTax": 15.87,
+        "totalPriceSplit": [
+          {
+            "name": "Subtotal",
+            "value": 14
+          },
+          {
+            "name": "Sales   Tax",
+            "value": 1.45
+          },
+          {
+            "name": "Service Fee",
+            "value": 0.42
+          }
+        ],
+        "dealListing": false,
+        "bookingCount": 2,
+        "liveShuttleTracking": false,
+        "shuttleService": false,
+        "parkingType": "Covered Valet - 24/7 + Standard Vehicle",
+        "pricingType": "Hourly",
+        "pricingTypeId": 3,
+        "childListingId": 9250522,
+        "partialPaymentLot": false,
+        "parkingPassLot": false,
+        "parkingFreeCancel": true,
+        "parkingLotNew": false,
+        "seoListing": false,
+        "bookable": true,
+        "popular": false,
+        "bestSeller": false,
+        "sellingFast": false,
+        "favouriteTag": false,
+        "lightningDeal": false,
+        "zone": false,
+        "zoneExtendable": false,
+        "wayplusBundleListing": false,
+        "promoCodeApplicable": false
+      }
+    }
+  ],
+  "cheapest": {
+    "name": "?",
+    "price": "13.00",
+    "currency": "USD",
+    "distance": "1.2",
+    "rating": null,
+    "lat": "40.8280865",
+    "lon": null,
+    "address": {
+      "addressLine1": "1755 Watson Ave",
+      "lat": "40.8280865",
+      "lon": "-73.8676806",
+      "city": "The Bronx",
+      "state": "New York",
+      "stateCode": "NY",
+      "country": "United States",
+      "zipCode": "10472",
+      "addressString": "1755 Watson Ave, The Bronx, New York, NY, United States, 10472"
+    },
+    "lotId": null,
+    "raw": {
+      "serviceType": "Parking",
+      "listingId": 9266797,
+      "listingName": "1755 Watson Ave_Watson Ave Garage",
+      "lat": "40.8280865",
+      "lon": "-73.8676806",
+      "minPrice": "13.00",
+      "avgRating": "4.5",
+      "totalReviews": 246,
+      "userFavourite": false,
+      "distance": "1.2",
+      "linearDistance": 1.16,
+      "distanceMetric": "MILES",
+      "images": [
+        {
+          "imagePath": "listing_image/Listing_1859128_img",
+          "thumbImagePath": "listing_thumbnail/Listing_1859128_thmb",
+          "isDefault": "Yes",
+          "imageIdFromPath": "1859128"
+        }
+      ],
+      "address": {
+        "addressLine1": "1755 Watson Ave",
+        "lat": "40.8280865",
+        "lon": "-73.8676806",
+        "city": "The Bronx",
+        "state": "New York",
+        "stateCode": "NY",
+        "country": "United States",
+        "zipCode": "10472",
+        "addressString": "1755 Watson Ave, The Bronx, New York, NY, United States, 10472"
+      },
+      "currency": "$",
+      "availability": true,
+      "totalPrice": 13,
+      "totalPriceWithTax": 14.74,
+      "totalPriceSplit": [
+        {
+          "name": "Subtotal",
+          "value": 13
+        },
+        {
+          "name": "Sales Tax",
+          "value": 1.35
+        },
+        {
+          "name": "Service Fee",
+          "value": 0.39
+        }
+      ],
+      "dealListing": false,
+      "bookingCount": 2,
+      "liveShuttleTracking": false,
+      "shuttleService": false,
+      "parkingType": "Covered Valet - 24/7 + Standard Vehicle",
+      "pricingType": "Hourly",
+      "pricingTypeId": 3,
+      "childListingId": 9266802,
+      "partialPaymentLot": false,
+      "parkingPassLot": false,
+      "parkingFreeCancel": true,
+      "parkingLotNew": false,
+      "seoListing": false,
+      "bookable": true,
+      "popular": false,
+      "bestSeller": false,
+      "sellingFast": false,
+      "favouriteTag": false,
+      "lightningDeal": false,
+      "zone": false,
+      "zoneExtendable": false,
+      "wayplusBundleListing": false,
+      "promoCodeApplicable": false
+    }
+  },
+  "proxied": true,
+  "apiHits": [
+    {
+      "url": "https://www.way.com/parking",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/way-search/v2/public/autosuggest/airports",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/way-search/v2/public/autosuggest/ports",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "ports": [
+          {
+            "suggestion": "Port Canaveral, Cape Canaveral, FL",
+            "addressDto": {
+              "lat": "28.408949529438928",
+              "lon": "-80.61908245725206"
+            },
+            "portCode": "POC"
+          },
+          {
+            "suggestion": "Port of Miami, Miami, FL",
+            "addressDto": {
+              "lat": "25.779024193578334",
+              "lon": "-80.17880729683709"
+            },
+            "portCode": "POM"
+          },
+          {
+            "suggestion": "Port Everglades, Fort Lauderdale, FL",
+            "addressDto": {
+              "lat": "26.081846980617833",
+              "lon": "-80.12056671313918"
+            },
+            "portCode": "PTE"
+          },
+          {
+            "suggestion": "Port Galveston, Galveston, TX",
+            "addressDto": {
+              "lat": "29.303672610248345",
+              "lon": "-94.8054161667589"
+            },
+            "portCode": "POG"
+          },
+          {
+            "suggestion": "Port of Tampa, Tampa, FL",
+            "addressDto": {
+              "lat": "27.943940363788027",
+              "lon": "-82.44588589325372"
+            },
+            "portCode": "POT"
+          },
+          {
+            "suggestion": "Cape Liberty Cruise Port, Bayonne, NJ",
+            "addressDto": {
+              "lat": "40.664774",
+              "lon": "-74.0740664"
+            },
+            "portCode": "POL"
+          },
+          {
+            "suggestion": "Port of Los Angeles, Los Angeles, CA",
+            "addressDto": {
+              "lat": "33.7423395",
+              "lon": "-118.303189"
+            },
+            "portCode": "PLA"
+          },
+          {
+            "suggestion": "Port of New Orleans, New Orleans, LA",
+            "addressDto": {
+              "lat": "29.985588",
+              "lon": "-90.257363"
+            },
+            "portCode": "NOP"
+          },
+          {
+            "suggestion": "Port of Baltimore, Baltimore, MD",
+            "addressDto": {
+              "lat": "39.266051052541",
+              "lon": "-76.5985824839954"
+            },
+            "portCode": "POB"
+          },
+          {
+            "suggestion": "Port of San Diego, San Diego, CA",
+            "addressDto": {
+              "lat": "32.73579098792383",
+              "lon": "-117.17742261704902"
+            },
+            "portCode": "POS"
+          },
+          {
+            "suggestion": "Manhattan Cruise Terminal, New York City, NY",
+            "addressDto": {
+              "lat": "40.7700361",
+              "lon": "-73.999994"
+            },
+            "portCode": "PMT"
+          },
+          {
+            "suggestion": "Port of San Francisco, San Francisco, CA",
+            "addressDto": {
+              "lat": "37.773831",
+              "lon": "-122.3896573"
+            },
+            "portCode": "PSF"
+          },
+          {
+            "suggestion": "Port of Long Beach, Long Beach, CA",
+            "addressDto": {
+              "lat": "33.7541777",
+              "lon": "-118.253487"
+            },
+            "portCode": "PLG"
+          },
+          {
+            "suggestion": "Port of Palm Beach, Riviera Beach, FL",
+            "addressDto": {
+              "lat": "26.767734968465884",
+              "lon": "-80.05125958906433"
+            },
+            "portCode": "PPB"
+          },
+          {
+            "suggestion": "Carnival Cruise Terminal Long Beach, California, CA",
+            "addressDto": {
+              "lat": "33.75185895114163",
+              "lon": "-118.18864136427142"
+            },
+            "portCode": "CLB"
+          },
+          {
+            "suggestion": "Boston Cruise Port, Boston, MA",
+            "addressDto": {
+              "lat": "42.343645839301786",
+              "lon": "-71.03353603284934"
+            },
+            "portCode": "BOP"
+          },
+          {
+            "suggestion": "Port of Seattle, Seattle, WA",
+            "addressDto": {
+              "lat": "47.61385680109914",
+              "lon": "-122.35431937034737"
+            },
+            "portCode": "SOP"
+          },
+          {
+            "suggestion": "Port of Charleston, Charleston, SC",
+            "addressDto": {
+              "lat": "32.78150566276557",
+              "lon": "-79.92381653437677"
+            },
+            "portCode": "PCC"
+          },
+          {
+            "suggestion": "Port of Jacksonville, Jacksonville, FL",
+            "addressDto": {
+              "lat": "30.407007",
+              "lon": "-81.578679"
+            },
+            "portCode": "POJ"
+          },
+          {
+            "suggestion": "Port of Norfolk, Norfolk, VA",
+            "addressDto": {
+              "lat": "36.847642185826174",
+              "lon": "-76.29599348844577"
+            },
+            "portCode": "PON"
+          },
+          {
+            "suggestion": "Port of Portland, Portland, OR",
+            "addressDto": {
+              "lat": "45.525783",
+              "lon": "-122.671958"
+            },
+            "portCode": "POP"
+          },
+          {
+            "suggestion": "Brooklyn Cruise Terminal, New York, NY",
+            "addressDto": {
+              "lat": "40.68216459391876",
+              "lon": "-74.01397773373046"
+            },
+            "portCode": "BCT"
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/assets/images/parking/parking-homepage-sprite.png",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/assets/images/parking/parking-thumbnail-image.jpg",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/way-search/v2/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium, Yankee Stadium",
+            "id": 15512068,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-15 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium, Yankee Stadium",
+            "id": 15307774,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium, Yankee Stadium",
+            "id": 15307686,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-30 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium, Yankee Stadium",
+            "id": 15307773,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-03 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium, Yankee Stadium",
+            "id": 15307614,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-07 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium, Yankee Stadium",
+            "id": 15307718,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-11 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/assets/images/parking/airport-parking-bg.jpg",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/assets/images/parking/cruise-parking-bg.png",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/assets/images/parking/cruise-icon.png",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/assets/images/parking/city-parking-bg.jpg",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/parking/city/bronx-ny/?lat=40.8296426&lon=-73.9261745&startTime=2026-06-15%2014%3A00%3A00&endTime=2026-06-15%2019%3A00%3A00&parkingSearchTab=HOURLY",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/city-parking/search",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Search results fetched successfully",
+        "last": false,
+        "first": false,
+        "totalPages": 0,
+        "size": 50,
+        "index": 1,
+        "totalRecords": 0,
+        "rows": []
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/city-parking/search",
+      "status": 400,
+      "body": {
+        "type": "about:blank",
+        "title": "Bad Request",
+        "status": 400,
+        "detail": "Failed to read request",
+        "instance": "/way-search/v1/public/city-parking/search"
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/city-parking/search",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Search results fetched successfully",
+        "last": false,
+        "first": false,
+        "totalPages": 0,
+        "size": 50,
+        "index": 1,
+        "totalRecords": 0,
+        "rows": []
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/city-parking/search",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Search results fetched successfully",
+        "last": true,
+        "first": true,
+        "totalPages": 1,
+        "size": 50,
+        "index": 1,
+        "totalRecords": 4,
+        "rows": [
+          {
+            "serviceType": "Parking",
+            "listingId": 9266797,
+            "listingName": "1755 Watson Ave_Watson Ave Garage",
+            "lat": "40.8280865",
+            "lon": "-73.8676806",
+            "minPrice": "13.00",
+            "avgRating": "4.5",
+            "totalReviews": 246,
+            "userFavourite": false,
+            "distance": "1.2",
+            "linearDistance": 1.16,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1859128_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1859128_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1859128"
+              }
+            ],
+            "address": {
+              "addressLine1": "1755 Watson Ave",
+              "lat": "40.8280865",
+              "lon": "-73.8676806",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10472",
+              "addressString": "1755 Watson Ave, The Bronx, New York, NY, United States, 10472"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 13,
+            "totalPriceWithTax": 14.74,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 13
+              },
+              {
+                "name": "Sales Tax",
+                "value": 1.35
+              },
+              {
+                "name": "Service Fee",
+                "value": 0.39
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Covered Valet - 24/7 + Standard Vehicle",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 9266802,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          },
+          {
+            "serviceType": "Parking",
+            "listingId": 15481594,
+            "listingName": "Chatterton Parking Corp. 2070 Chatterton Parking",
+            "lat": "40.8275582",
+            "lon": "-73.85389219999999",
+            "minPrice": "19.00",
+            "avgRating": "4.5",
+            "totalReviews": 157,
+            "userFavourite": false,
+            "distance": "1.3",
+            "linearDistance": 1.32,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1900011_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1900011_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1900011"
+              }
+            ],
+            "address": {
+              "addressLine1": "2070 Chatterton Avenue",
+              "lat": "40.8275582",
+              "lon": "-73.85389219999999",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10472",
+              "addressString": "2070 Chatterton Avenue, The Bronx, New York, NY, United States, 10472"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 19,
+            "totalPriceWithTax": 19,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 19
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Outdoor Valet",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 15481595,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          },
+          {
+            "serviceType": "Parking",
+            "listingId": 9388548,
+            "listingName": "One Fordham Plaza Garage_450 East 189th St Parking",
+            "lat": "40.8595002",
+            "lon": "-73.8901929",
+            "minPrice": "17.00",
+            "avgRating": "4.4",
+            "totalReviews": 143,
+            "userFavourite": false,
+            "distance": "1.7",
+            "linearDistance": 1.67,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1860260_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1860260_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1860260"
+              }
+            ],
+            "address": {
+              "addressLine1": "450 E 189th St",
+              "lat": "40.8595002",
+              "lon": "-73.8901929",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10458",
+              "addressString": "450 E 189th St, The Bronx, New York, NY, United States, 10458"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 17,
+            "totalPriceWithTax": 17.51,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 17
+              },
+              {
+                "name": "Service Fee",
+                "value": 0.51
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Covered Self Park",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 9388549,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          },
+          {
+            "serviceType": "Parking",
+            "listingId": 9250521,
+            "listingName": "Bathgate Garage Parking",
+            "lat": "40.846089",
+            "lon": "-73.8971719",
+            "minPrice": "14.00",
+            "avgRating": "4.6",
+            "totalReviews": 183,
+            "userFavourite": false,
+            "distance": "1.7",
+            "linearDistance": 1.69,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1856456_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1856456_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1856456"
+              }
+            ],
+            "address": {
+              "addressLine1": "1880 Bathgate Ave",
+              "lat": "40.846089",
+              "lon": "-73.8971719",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10457",
+              "addressString": "1880 Bathgate Ave, The Bronx, New York, NY, United States, 10457"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 14,
+            "totalPriceWithTax": 15.87,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 14
+              },
+              {
+                "name": "Sales   Tax",
+                "value": 1.45
+              },
+              {
+                "name": "Service Fee",
+                "value": 0.42
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Covered Valet - 24/7 + Standard Vehicle",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 9250522,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          }
+        ],
+        "info": {
+          "parkingSearchTab": "CITY",
+          "showMonthlyParking": false,
+          "venuesSearch": false,
+          "venueMatched": false,
+          "city": "Bronx",
+          "stateCode": "NY",
+          "parkingPassLotsAvailable": false,
+          "lat": 40.8447819,
+          "lon": -73.8648268,
+          "redeemedPromoCode": false,
+          "retryFetchingMinAndAvgPrice": false,
+          "showTotalPriceWithTaxes": false
+        }
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/city-parking/search",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Search results fetched successfully",
+        "last": true,
+        "first": true,
+        "totalPages": 1,
+        "size": 50,
+        "index": 1,
+        "totalRecords": 4,
+        "rows": [
+          {
+            "serviceType": "Parking",
+            "listingId": 9266797,
+            "listingName": "1755 Watson Ave_Watson Ave Garage",
+            "lat": "40.8280865",
+            "lon": "-73.8676806",
+            "minPrice": "13.00",
+            "avgRating": "4.5",
+            "totalReviews": 246,
+            "userFavourite": false,
+            "distance": "1.2",
+            "linearDistance": 1.16,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1859128_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1859128_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1859128"
+              }
+            ],
+            "address": {
+              "addressLine1": "1755 Watson Ave",
+              "lat": "40.8280865",
+              "lon": "-73.8676806",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10472",
+              "addressString": "1755 Watson Ave, The Bronx, New York, NY, United States, 10472"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 13,
+            "totalPriceWithTax": 14.74,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 13
+              },
+              {
+                "name": "Sales Tax",
+                "value": 1.35
+              },
+              {
+                "name": "Service Fee",
+                "value": 0.39
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Covered Valet - 24/7 + Standard Vehicle",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 9266802,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          },
+          {
+            "serviceType": "Parking",
+            "listingId": 15481594,
+            "listingName": "Chatterton Parking Corp. 2070 Chatterton Parking",
+            "lat": "40.8275582",
+            "lon": "-73.85389219999999",
+            "minPrice": "19.00",
+            "avgRating": "4.5",
+            "totalReviews": 157,
+            "userFavourite": false,
+            "distance": "1.3",
+            "linearDistance": 1.32,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1900011_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1900011_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1900011"
+              }
+            ],
+            "address": {
+              "addressLine1": "2070 Chatterton Avenue",
+              "lat": "40.8275582",
+              "lon": "-73.85389219999999",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10472",
+              "addressString": "2070 Chatterton Avenue, The Bronx, New York, NY, United States, 10472"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 19,
+            "totalPriceWithTax": 19,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 19
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Outdoor Valet",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 15481595,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          },
+          {
+            "serviceType": "Parking",
+            "listingId": 9388548,
+            "listingName": "One Fordham Plaza Garage_450 East 189th St Parking",
+            "lat": "40.8595002",
+            "lon": "-73.8901929",
+            "minPrice": "17.00",
+            "avgRating": "4.4",
+            "totalReviews": 143,
+            "userFavourite": false,
+            "distance": "1.7",
+            "linearDistance": 1.67,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1860260_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1860260_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1860260"
+              }
+            ],
+            "address": {
+              "addressLine1": "450 E 189th St",
+              "lat": "40.8595002",
+              "lon": "-73.8901929",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10458",
+              "addressString": "450 E 189th St, The Bronx, New York, NY, United States, 10458"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 17,
+            "totalPriceWithTax": 17.51,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 17
+              },
+              {
+                "name": "Service Fee",
+                "value": 0.51
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Covered Self Park",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 9388549,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          },
+          {
+            "serviceType": "Parking",
+            "listingId": 9250521,
+            "listingName": "Bathgate Garage Parking",
+            "lat": "40.846089",
+            "lon": "-73.8971719",
+            "minPrice": "14.00",
+            "avgRating": "4.6",
+            "totalReviews": 183,
+            "userFavourite": false,
+            "distance": "1.7",
+            "linearDistance": 1.69,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1856456_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1856456_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1856456"
+              }
+            ],
+            "address": {
+              "addressLine1": "1880 Bathgate Ave",
+              "lat": "40.846089",
+              "lon": "-73.8971719",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10457",
+              "addressString": "1880 Bathgate Ave, The Bronx, New York, NY, United States, 10457"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 14,
+            "totalPriceWithTax": 15.87,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 14
+              },
+              {
+                "name": "Sales   Tax",
+                "value": 1.45
+              },
+              {
+                "name": "Service Fee",
+                "value": 0.42
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Covered Valet - 24/7 + Standard Vehicle",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 9250522,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          }
+        ],
+        "info": {
+          "parkingSearchTab": "CITY",
+          "showMonthlyParking": false,
+          "venuesSearch": false,
+          "venueMatched": false,
+          "city": "Bronx",
+          "stateCode": "NY",
+          "parkingPassLotsAvailable": false,
+          "lat": 40.8447819,
+          "lon": -73.8648268,
+          "redeemedPromoCode": false,
+          "retryFetchingMinAndAvgPrice": false,
+          "showTotalPriceWithTaxes": false
+        }
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/city-parking/search",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Search results fetched successfully",
+        "last": true,
+        "first": true,
+        "totalPages": 1,
+        "size": 50,
+        "index": 1,
+        "totalRecords": 4,
+        "rows": [
+          {
+            "serviceType": "Parking",
+            "listingId": 9266797,
+            "listingName": "1755 Watson Ave_Watson Ave Garage",
+            "lat": "40.8280865",
+            "lon": "-73.8676806",
+            "minPrice": "13.00",
+            "avgRating": "4.5",
+            "totalReviews": 246,
+            "userFavourite": false,
+            "distance": "1.2",
+            "linearDistance": 1.16,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1859128_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1859128_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1859128"
+              }
+            ],
+            "address": {
+              "addressLine1": "1755 Watson Ave",
+              "lat": "40.8280865",
+              "lon": "-73.8676806",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10472",
+              "addressString": "1755 Watson Ave, The Bronx, New York, NY, United States, 10472"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 13,
+            "totalPriceWithTax": 14.74,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 13
+              },
+              {
+                "name": "Sales Tax",
+                "value": 1.35
+              },
+              {
+                "name": "Service Fee",
+                "value": 0.39
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Covered Valet - 24/7 + Standard Vehicle",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 9266802,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          },
+          {
+            "serviceType": "Parking",
+            "listingId": 15481594,
+            "listingName": "Chatterton Parking Corp. 2070 Chatterton Parking",
+            "lat": "40.8275582",
+            "lon": "-73.85389219999999",
+            "minPrice": "19.00",
+            "avgRating": "4.5",
+            "totalReviews": 157,
+            "userFavourite": false,
+            "distance": "1.3",
+            "linearDistance": 1.32,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1900011_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1900011_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1900011"
+              }
+            ],
+            "address": {
+              "addressLine1": "2070 Chatterton Avenue",
+              "lat": "40.8275582",
+              "lon": "-73.85389219999999",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10472",
+              "addressString": "2070 Chatterton Avenue, The Bronx, New York, NY, United States, 10472"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 19,
+            "totalPriceWithTax": 19,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 19
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Outdoor Valet",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 15481595,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          },
+          {
+            "serviceType": "Parking",
+            "listingId": 9388548,
+            "listingName": "One Fordham Plaza Garage_450 East 189th St Parking",
+            "lat": "40.8595002",
+            "lon": "-73.8901929",
+            "minPrice": "17.00",
+            "avgRating": "4.4",
+            "totalReviews": 143,
+            "userFavourite": false,
+            "distance": "1.7",
+            "linearDistance": 1.67,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1860260_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1860260_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1860260"
+              }
+            ],
+            "address": {
+              "addressLine1": "450 E 189th St",
+              "lat": "40.8595002",
+              "lon": "-73.8901929",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10458",
+              "addressString": "450 E 189th St, The Bronx, New York, NY, United States, 10458"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 17,
+            "totalPriceWithTax": 17.51,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 17
+              },
+              {
+                "name": "Service Fee",
+                "value": 0.51
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Covered Self Park",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 9388549,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          },
+          {
+            "serviceType": "Parking",
+            "listingId": 9250521,
+            "listingName": "Bathgate Garage Parking",
+            "lat": "40.846089",
+            "lon": "-73.8971719",
+            "minPrice": "14.00",
+            "avgRating": "4.6",
+            "totalReviews": 183,
+            "userFavourite": false,
+            "distance": "1.7",
+            "linearDistance": 1.69,
+            "distanceMetric": "MILES",
+            "images": [
+              {
+                "imagePath": "listing_image/Listing_1856456_img",
+                "thumbImagePath": "listing_thumbnail/Listing_1856456_thmb",
+                "isDefault": "Yes",
+                "imageIdFromPath": "1856456"
+              }
+            ],
+            "address": {
+              "addressLine1": "1880 Bathgate Ave",
+              "lat": "40.846089",
+              "lon": "-73.8971719",
+              "city": "The Bronx",
+              "state": "New York",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10457",
+              "addressString": "1880 Bathgate Ave, The Bronx, New York, NY, United States, 10457"
+            },
+            "currency": "$",
+            "availability": true,
+            "totalPrice": 14,
+            "totalPriceWithTax": 15.87,
+            "totalPriceSplit": [
+              {
+                "name": "Subtotal",
+                "value": 14
+              },
+              {
+                "name": "Sales   Tax",
+                "value": 1.45
+              },
+              {
+                "name": "Service Fee",
+                "value": 0.42
+              }
+            ],
+            "dealListing": false,
+            "bookingCount": 2,
+            "liveShuttleTracking": false,
+            "shuttleService": false,
+            "parkingType": "Covered Valet - 24/7 + Standard Vehicle",
+            "pricingType": "Hourly",
+            "pricingTypeId": 3,
+            "childListingId": 9250522,
+            "partialPaymentLot": false,
+            "parkingPassLot": false,
+            "parkingFreeCancel": true,
+            "parkingLotNew": false,
+            "seoListing": false,
+            "bookable": true,
+            "popular": false,
+            "bestSeller": false,
+            "sellingFast": false,
+            "favouriteTag": false,
+            "lightningDeal": false,
+            "zone": false,
+            "zoneExtendable": false,
+            "wayplusBundleListing": false,
+            "promoCodeApplicable": false
+          }
+        ],
+        "info": {
+          "parkingSearchTab": "CITY",
+          "showMonthlyParking": false,
+          "venuesSearch": false,
+          "venueMatched": false,
+          "city": "Bronx",
+          "stateCode": "NY",
+          "parkingPassLotsAvailable": false,
+          "lat": 40.8447819,
+          "lon": -73.8648268,
+          "redeemedPromoCode": false,
+          "retryFetchingMinAndAvgPrice": false,
+          "showTotalPriceWithTaxes": false
+        }
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v2/public/autosuggest/airports",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/search/filters/PARKING",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/seo/city//state/average/prices",
+      "status": 404,
+      "body": {
+        "type": "about:blank",
+        "title": "Not Found",
+        "status": 404,
+        "detail": "No static resource v1/public/seo/city/state/average/prices.",
+        "instance": "/way-search/v1/public/seo/city/state/average/prices"
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Yakima Valley Pippins vs. Kelowna Falcons",
+            "id": 14619566,
+            "addressDto": {
+              "addressLine1": "null",
+              "addressLine2": "",
+              "aptNo": "",
+              "lat": "46.5914874",
+              "lon": "-120.4855649",
+              "city": "Yakima",
+              "state": "Washington",
+              "stateCode": "WA",
+              "country": "United States",
+              "zipCode": "98901",
+              "addressString": "Yakima, Washington, WA, United States, 98901"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-27 18:35:00",
+            "eventVenueName": "Yakima County Stadium",
+            "eventVenueId": 11658,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Yakima Valley Pippins vs. Ridgefield Raptors",
+            "id": 14622570,
+            "addressDto": {
+              "addressLine1": "null",
+              "addressLine2": "",
+              "aptNo": "",
+              "lat": "46.5914874",
+              "lon": "-120.4855649",
+              "city": "Yakima",
+              "state": "Washington",
+              "stateCode": "WA",
+              "country": "United States",
+              "zipCode": "98901",
+              "addressString": "Yakima, Washington, WA, United States, 98901"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-07 18:35:00",
+            "eventVenueName": "Yakima County Stadium",
+            "eventVenueId": 11658,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Yakima Valley Pippins vs. Corvallis Knights",
+            "id": 14627359,
+            "addressDto": {
+              "addressLine1": "null",
+              "addressLine2": "",
+              "aptNo": "",
+              "lat": "46.5914874",
+              "lon": "-120.4855649",
+              "city": "Yakima",
+              "state": "Washington",
+              "stateCode": "WA",
+              "country": "United States",
+              "zipCode": "98901",
+              "addressString": "Yakima, Washington, WA, United States, 98901"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-24 18:35:00",
+            "eventVenueName": "Yakima County Stadium",
+            "eventVenueId": 11658,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Yakima Valley Pippins vs. Ridgefield Raptors",
+            "id": 14622851,
+            "addressDto": {
+              "addressLine1": "null",
+              "addressLine2": "",
+              "aptNo": "",
+              "lat": "46.5914874",
+              "lon": "-120.4855649",
+              "city": "Yakima",
+              "state": "Washington",
+              "stateCode": "WA",
+              "country": "United States",
+              "zipCode": "98901",
+              "addressString": "Yakima, Washington, WA, United States, 98901"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-08 18:35:00",
+            "eventVenueName": "Yakima County Stadium",
+            "eventVenueId": 11658,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Yakima Valley Pippins vs. Portland Pickles",
+            "id": 14625711,
+            "addressDto": {
+              "addressLine1": "null",
+              "addressLine2": "",
+              "aptNo": "",
+              "lat": "46.5914874",
+              "lon": "-120.4855649",
+              "city": "Yakima",
+              "state": "Washington",
+              "stateCode": "WA",
+              "country": "United States",
+              "zipCode": "98901",
+              "addressString": "Yakima, Washington, WA, United States, 98901"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-18 18:35:00",
+            "eventVenueName": "Yakima County Stadium",
+            "eventVenueId": 11658,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Yakima Valley Pippins vs. Springfield Drifters",
+            "id": 14628627,
+            "addressDto": {
+              "addressLine1": "null",
+              "addressLine2": "",
+              "aptNo": "",
+              "lat": "46.5914874",
+              "lon": "-120.4855649",
+              "city": "Yakima",
+              "state": "Washington",
+              "stateCode": "WA",
+              "country": "United States",
+              "zipCode": "98901",
+              "addressString": "Yakima, Washington, WA, United States, 98901"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-28 18:35:00",
+            "eventVenueName": "Yakima County Stadium",
+            "eventVenueId": 11658,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15512068,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-15 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307774,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307686,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-30 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307773,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-03 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307614,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-07 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307718,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-11 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15512068,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-15 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307774,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307686,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-30 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307773,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-03 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307614,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-07 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307718,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-11 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15512068,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-15 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307774,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307686,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-30 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307773,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-03 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307614,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-07 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307718,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-11 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15512068,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-15 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307774,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307686,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-30 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307773,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-03 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307614,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-07 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307718,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-11 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15512068,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-15 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307774,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307686,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-30 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307773,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-03 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307614,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-07 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307718,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-11 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307794,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-09-03 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307736,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-09-11 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307704,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-09-20 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307793,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-09-21 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15512068,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-15 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307774,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/city-parking/search",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Search results fetched successfully",
+        "last": false,
+        "first": false,
+        "totalPages": 0,
+        "size": 12,
+        "index": 1,
+        "totalRecords": 0,
+        "rows": []
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15512068,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-15 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307774,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307686,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-30 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307773,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-03 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307614,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-07 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307718,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-11 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15512036,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-13 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307702,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-19 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307810,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-26 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307719,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-30 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307720,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307780,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-27 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15512036,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-13 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307702,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-19 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307810,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-26 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307719,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-30 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307720,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307780,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-27 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Suggestions fetched successfully",
+        "response": [
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15512068,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-15 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307774,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-06-17 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307686,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-07-30 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307773,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-03 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307614,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-07 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          },
+          {
+            "suggestion": "Classic Tour at Yankee Stadium",
+            "id": 15307718,
+            "addressDto": {
+              "addressLine1": "1 E 161st St, Bronx, NY 10451, United States",
+              "lat": "40.8296426",
+              "lon": "-73.9261745",
+              "city": "Bronx",
+              "state": "NY",
+              "stateCode": "NY",
+              "country": "United States",
+              "zipCode": "10451",
+              "addressString": "1 E 161st St, Bronx, NY 10451, United States, Bronx, NY, NY, United States, 10451"
+            },
+            "indexServiceType": "EVENTS",
+            "eventTime": "2026-08-11 17:00:00",
+            "eventVenueName": "Yankee Stadium",
+            "eventVenueId": 703713,
+            "eventParking": false
+          }
+        ]
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/city-parking/search",
+      "status": 200,
+      "body": {
+        "apiStatus": "Success",
+        "message": "Search results fetched successfully",
+        "last": false,
+        "first": false,
+        "totalPages": 0,
+        "size": 500,
+        "index": 1,
+        "totalRecords": 0,
+        "rows": []
+      }
+    },
+    {
+      "url": "https://www.way.com/way-search/v1/public/autosuggest",
+      "status": 200,
+      "body": null
+    },
+    {
+      "url": "https://bat.bing.com/action/0?ti=5901879&Ver=2&mid=7d2d3e69-76ce-49ef-8ede-1f0330285c16&bo=1&sid=4e471e0066be11f1a568ad4f75ad5218&vid=4e47850066be11f1bfcb9114345e5477&vids=1&msclkid=N&uach=pv%3D10.0&pi=918639831&lg=en-US&sw=1366&sh=768&sc=32&tl=Parking%20Spot%20Near%20.&kw=.%20Parking%20Spots%20Nearby,%20Cheap%20Parking%20Spots%20Near%20.,%20Street%20Parking%20Spots%20Near%20.,%20Parking%20Spots%20Near%20.,%20Best%20Parking%20Spots%20in%20.,%20Affordable%20Parking%20Spots%20Near%20.&p=https%3A%2F%2Fwww.way.com%2Fparking%2Fcity%2Fbronx-ny%2F%3Flat%3D40.8296426%26lon%3D-73.9261745%26startTime%3D2026-06-15%252014%3A00%3A00%26endTime%3D2026-06-15%252019%3A00%3A00%26parkingSearchTab%3DHOURLY&r=&lt=15058&evt=pageLoad&sv=2&cdb=AQAQ&rn=741931",
+      "status": 204,
+      "body": null
+    },
+    {
+      "url": "https://track-na2.hubspot.com/__ptq.gif?k=1&sd=1366x768&cd=32-bit&cs=UTF-8&ln=en-us&v=1.1&a=244193529&rcu=https%3A%2F%2Fwww.way.com%2Fparking%2Fcity%2Fbronx-ny&pu=https%3A%2F%2Fwww.way.com%2Fparking%2Fcity%2Fbronx-ny%2F%3Flat%3D40.8296426%26lon%3D-73.9261745%26startTime%3D2026-06-15%252014%3A00%3A00%26endTime%3D2026-06-15%252019%3A00%3A00%26parkingSearchTab%3DHOURLY&t=Parking+Spot+Near+.&cts=1781310303573&vi=f49515a04dbfeed388df098dd0d1f626&nc=true&u=247850584.f49515a04dbfeed388df098dd0d1f626.1781310303565.1781310303565.1781310303565.1&b=247850584.1.1781310303566&cc=15",
+      "status": 200,
+      "body": null
+    }
+  ]
+}
