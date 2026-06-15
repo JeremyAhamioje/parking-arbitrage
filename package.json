@@ -23,6 +23,7 @@
     "multer": "^2.1.1",
     "playwright": "^1.44.0",
     "playwright-extra": "^4.3.6",
+    "proxy-chain": "^3.0.0",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "xlsx": "^0.18.5"
   }

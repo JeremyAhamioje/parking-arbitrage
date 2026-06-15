@@ -12,6 +12,7 @@
 import { chromium } from 'playwright-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import { existsSync, readFileSync } from 'fs'
+import { anonymizeProxy, closeAnonymizedProxy } from 'proxy-chain'
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36'
 
@@ -72,9 +73,26 @@ export function parseProxy(envValue, { sessionId = null, sessionFormat = '{user}
 export async function launchStealthContext({ proxy = null, sessionFile = null, headful = true, timezoneId = 'America/New_York', blockAssets = true } = {}) {
   applyStealth()
 
+  // Route the proxy through a local auth-less relay (proxy-chain) by default.
+  // This is the standard fix for authenticated proxies Chromium can't reach
+  // directly — Chromium only ever talks to 127.0.0.1 and node does the real
+  // upstream. It also bypasses local AV (e.g. Avast) that blocks chrome.exe's
+  // outbound to the proxy but not node's. Set USE_PROXY_CHAIN=0 to force direct.
+  let launchProxy = proxy
+  let anonUrl = null
+  if (proxy && process.env.USE_PROXY_CHAIN !== '0') {
+    const auth = proxy.username ? `${encodeURIComponent(proxy.username)}:${encodeURIComponent(proxy.password || '')}@` : ''
+    try {
+      anonUrl = await anonymizeProxy(proxy.server.replace('://', `://${auth}`))
+      launchProxy = { server: anonUrl }
+    } catch (e) {
+      console.warn(`[stealth] proxy-chain relay failed (${e.message}); using direct proxy`)
+    }
+  }
+
   const browser = await chromium.launch({
     headless: !headful,
-    proxy: proxy || undefined,
+    proxy: launchProxy || undefined,
     args: [
       '--disable-blink-features=AutomationControlled',
       // Container survival on small instances (Render free): use /tmp instead of
@@ -86,6 +104,9 @@ export async function launchStealthContext({ proxy = null, sessionFile = null, h
       '--disable-gpu',
     ],
   })
+
+  // Tear down the local relay when the browser closes (no leaked relay servers).
+  if (anonUrl) browser.on('disconnected', () => { closeAnonymizedProxy(anonUrl, true).catch(() => {}) })
 
   const ctxOpts = {
     userAgent: UA,
