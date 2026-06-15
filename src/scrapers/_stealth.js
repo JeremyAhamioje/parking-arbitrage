@@ -75,7 +75,16 @@ export async function launchStealthContext({ proxy = null, sessionFile = null, h
   const browser = await chromium.launch({
     headless: !headful,
     proxy: proxy || undefined,
-    args: ['--disable-blink-features=AutomationControlled'],
+    args: [
+      '--disable-blink-features=AutomationControlled',
+      // Container survival on small instances (Render free): use /tmp instead of
+      // the tiny 64MB /dev/shm (the #1 cause of Chromium crashes in Docker), and
+      // drop the sandbox/GPU which need privileges/hardware we don't have.
+      '--disable-dev-shm-usage',
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-gpu',
+    ],
   })
 
   const ctxOpts = {

@@ -30,7 +30,10 @@ let _browser = null;
 let _page = null;
 
 export async function initBrowser() {
-  _browser = await chromium.launch({ headless: true });
+  _browser = await chromium.launch({
+    headless: true,
+    args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+  });
   const ctx = await _browser.newContext({
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
     locale: 'en-US',
