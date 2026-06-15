@@ -1,0 +1,28 @@
+name: Keep services warm
+
+# Render Free services spin down after ~15 min idle; the next request then pays a
+# 30-60s cold start. This pings each service's /health on a schedule to keep them
+# awake. NOTE: GitHub cron can be delayed several minutes on free/private repos —
+# if warmth slips, an external monitor (cron-job.org, UptimeRobot) hits exact
+# intervals more reliably. This only prevents cold starts; it doesn't speed up
+# the actual fetch (that's CPU/proxy).
+#
+# Set two repo VARIABLES (Settings → Secrets and variables → Actions → Variables):
+#   API_URL    = https://parking-api-xxxx.onrender.com
+#   ENGINE_URL = https://parking-engine-xxxx.onrender.com
+on:
+  schedule:
+    - cron: '*/10 * * * *'   # every 10 minutes
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /health on each service
+        run: |
+          for url in "${{ vars.API_URL }}" "${{ vars.ENGINE_URL }}"; do
+            [ -z "$url" ] && continue
+            echo "→ $url/health"
+            curl -fsS --max-time 90 "$url/health" && echo "  OK" || echo "  (no response — was likely asleep, now waking)"
+          done
