@@ -26,7 +26,7 @@ function mapListing(l) {
     price:          l.allInPrice ?? l.price ?? null,
     advertised:     l.price ?? null,
     currency:       'USD',
-    available:      true,
+    available:      l.available ?? true,
     availableSpaces: null,
     distanceMeters: typeof l.distance === 'number' ? Math.round(l.distance) : null,
     facilityId:     String(l.facilityId || ''),

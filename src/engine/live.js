@@ -20,6 +20,11 @@ const TIMEOUTS = {
   way:      +(process.env.ENGINE_TIMEOUT_WAY || 90_000),
 }
 
+// Radius cap (all platforms): drop lots farther than this from the venue. Set
+// MAX_RADIUS_MILES=0 to disable. Lots with an unknown distance are kept (Way
+// occasionally omits it) — we can't range-filter what we can't measure.
+const MAX_RADIUS_MILES = +(process.env.MAX_RADIUS_MILES ?? 2)
+
 // Statuses worth retrying — transient network / anti-bot, not definitive misses.
 const RETRYABLE = new Set(['error', 'timeout', 'blocked'])
 const MAX_ATTEMPTS = Math.max(1, +(process.env.ENGINE_RETRIES || 1) + 1)
@@ -105,6 +110,15 @@ async function orchestrate(mode, query, platformKeys) {
       error: env.error ?? null,
     }
   })
+
+  // Radius cap — keep only lots within MAX_RADIUS_MILES of the venue (unknown
+  // distance is kept). Applies uniformly to SpotHero, ParkWhiz, and Way.
+  if (MAX_RADIUS_MILES > 0) {
+    const maxMeters = MAX_RADIUS_MILES * 1609.34
+    for (let i = rows.length - 1; i >= 0; i--) {
+      if (rows[i].distanceMeters != null && rows[i].distanceMeters > maxMeters) rows.splice(i, 1)
+    }
+  }
 
   // Group by platform (SpotHero → ParkWhiz → Way) so the table and the XLSX
   // aren't a messy cross-platform interleave; cheapest-first WITHIN each platform.

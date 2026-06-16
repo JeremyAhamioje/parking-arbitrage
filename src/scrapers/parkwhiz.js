@@ -330,13 +330,21 @@ export function extractListingsFromPageData({ data }) {
     const opts = Array.isArray(item.purchase_options) ? item.purchase_options : []
 
     // Each option's all-in price (price.USD) + base (base_price.USD), in dollars.
+    // SOLD-OUT lots still emit a STUB option: epoch-zero window (1969/1970),
+    // base_price $0.00, a nominal ~$0.99 service fee, space_availability
+    // "unavailable". Those produced bogus "$0.99 · Available" listings that don't
+    // exist as buyable passes on parkwhiz.com — so reject any option that is
+    // unavailable OR carries a non-real (pre-2000) start window.
     const priced = opts
       .map(o => {
-        const allIn = money(o.price ?? o.all_in_price)
-        const base  = money(o.base_price ?? o.price)
-        return { allIn, base: base ?? allIn }
+        const allIn  = money(o.price ?? o.all_in_price)
+        const base   = money(o.base_price ?? o.price)
+        const status = String(o.space_availability?.status || '').toLowerCase()
+        const startYr = new Date(o.start_time || 0).getUTCFullYear()
+        const sellable = status !== 'unavailable' && status !== 'sold_out' && status !== 'soldout' && startYr >= 2000
+        return { allIn, base: base ?? allIn, sellable }
       })
-      .filter(p => p.allIn != null && p.allIn > 0)
+      .filter(p => p.allIn != null && p.allIn > 0 && p.sellable)
     if (!priced.length) return null
 
     const best = priced.reduce((a, b) => (b.allIn < a.allIn ? b : a)) // cheapest all-in
@@ -364,6 +372,7 @@ export function extractListingsFromPageData({ data }) {
       state:       pw.state ?? null,
       price,
       allInPrice,
+      available:   true, // only sellable (in-stock, real-window) options survived the filter
       rating:      num(pw.rating_summary?.rating) ?? num(pw.rating_summary?.average) ?? num(pw.rating),
       distance:    meters,   // metres from venue
       spaces:      null,     // ParkWhiz exposes an availability STATUS, not a count
