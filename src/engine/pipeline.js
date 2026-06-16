@@ -126,6 +126,14 @@ export function cleanVenueName(s) {
     .replace(/\s*[-–—]\s*$/, '') // any dangling separator left behind
     .trim() || String(s || '').trim() // never strip a venue down to nothing
 }
+// Reseller venues read "<room> at <building>" (e.g. "Dolby Live at Park MGM").
+// The full string frequently fails to geocode while the part AFTER "at" — the
+// actual building/resort — resolves cleanly and carries the parking. Returns
+// that fallback, or '' when there's no "at" to split on.
+export function venueAfterAt(s) {
+  const m = String(s || '').match(/\bat\b\s+(.+)$/i)
+  return m ? m[1].trim() : ''
+}
 
 /** Pick the strongest 'ok' platform from a live-orchestrator result. */
 function bestPlatform(live) {
@@ -194,11 +202,22 @@ export async function processSheet(buffer, opts = {}) {
       stats.skipped++; out.push(enriched); continue
     }
 
+    const doFetch = (v) => event && eventFetch ? eventFetch({ venue: v, event, date })
+                         : dateFetch ? dateFetch({ venue: v, date })
+                         : Promise.resolve(null)
     let live
     try {
-      live = event && eventFetch ? await eventFetch({ venue, event, date })
-           : dateFetch ? await dateFetch({ venue, date })
-           : null
+      live = await doFetch(venue)
+      // If the full venue resolved nothing, retry once on the "<building>" after
+      // "at" — reseller "<room> at <building>" names often fail in full but
+      // resolve on the building. Only rows that would be NO_DATA pay this cost.
+      if (live && !bestPlatform(live)) {
+        const alt = venueAfterAt(venue)
+        if (alt && alt.toLowerCase() !== venue.toLowerCase()) {
+          const live2 = await doFetch(alt)
+          if (live2 && bestPlatform(live2)) live = live2
+        }
+      }
     } catch (e) {
       enriched[E['Match Status']] = 'ERROR'
       enriched[E['Error Flag']] = `scrape_error: ${e.message}`
