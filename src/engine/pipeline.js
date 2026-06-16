@@ -22,8 +22,8 @@ import { adjudicate } from './gemini.js'
 // parking sheet's lot column can't be mistaken for the venue.
 const ROLE_ALIASES = {
   venue:      ['venue', 'event venue', 'arena', 'stadium', 'ballpark', 'coliseum'],
-  spot:       ['spot', 'lot', 'garage', 'facility', 'structure', 'parking spot', 'parking', 'address', 'street', 'location', 'place', 'site'],
-  event:      ['event', 'show', 'game', 'concert', 'artist', 'performer', 'match', 'fixture'],
+  spot:       ['spot', 'lot', 'garage', 'facility', 'structure', 'parking spot', 'parking', 'address', 'street', 'location', 'place', 'site', 'section', 'our section'],
+  event:      ['event', 'event name', 'show', 'game', 'concert', 'artist', 'performer', 'match', 'fixture'],
   date:       ['date', 'event date', 'day', 'when', 'show date'],
   buyingPrice: ['buying price', 'buy price', 'cost', 'our price', 'purchase price', 'paid'],
   competitorPrice: ['competitor price', 'comp price', 'market price', 'comp', 'competition'],
