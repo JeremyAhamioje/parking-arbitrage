@@ -106,6 +106,27 @@ export function detectColumns(headers) {
 
 const val = (row, header) => (header && row[header] != null ? String(row[header]).trim() : '')
 
+// Ticket-reseller exports pollute venue/event with boilerplate no parking
+// platform will match ("PARKING PASSES ONLY …", "… Complex Parking Lots"). Strip
+// it for SEARCH ONLY — the user's original columns are never modified.
+//   event: 'PARKING PASSES ONLY "World of Warcraft®: 20 Years of Music"' -> 'World of Warcraft: 20 Years of Music'
+//   venue: 'The Theatre at Resorts World Las Vegas - Complex Parking Lots'  -> 'The Theatre at Resorts World Las Vegas'
+export function cleanEventName(s) {
+  return String(s || '')
+    .replace(/^\s*parking\s+passes?\s+only\s*/i, '') // reseller prefix
+    .replace(/[®™]/g, '')
+    .replace(/^["'“”\s]+|["'“”\s]+$/g, '') // wrapping quotes/space
+    .trim()
+}
+export function cleanVenueName(s) {
+  return String(s || '')
+    .replace(/[®™]/g, '')
+    // trailing "(- )(Complex )Parking( Lot/Lots)" — the reseller's parking-lot tag
+    .replace(/\s*[-–—]?\s*(complex\s+)?parking(\s+lots?)?\s*$/i, '')
+    .replace(/\s*[-–—]\s*$/, '') // any dangling separator left behind
+    .trim() || String(s || '').trim() // never strip a venue down to nothing
+}
+
 /** Pick the strongest 'ok' platform from a live-orchestrator result. */
 function bestPlatform(live) {
   const ok = (live.platforms || []).filter(p => p.status === 'ok' && p.count > 0)
@@ -156,8 +177,8 @@ export async function processSheet(buffer, opts = {}) {
 
   for (let i = 0; i < queue.length; i++) {
     const row = queue[i]
-    const venue = val(row, detected.venue)
-    const event = val(row, detected.event)
+    const venue = cleanVenueName(val(row, detected.venue))
+    const event = cleanEventName(val(row, detected.event))
     const date = val(row, detected.date)
     const spot = val(row, detected.spot)
 
