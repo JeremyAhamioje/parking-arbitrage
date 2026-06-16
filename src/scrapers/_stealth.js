@@ -138,8 +138,12 @@ export async function launchStealthContext({ proxy = null, sessionFile = null, h
   // Turnstile is script-driven, so blocking image/media/font doesn't affect it.
   if (blockAssets) {
     const BLOCK = new Set(['image', 'media', 'font'])
-    await context.route('**/*', route =>
-      BLOCK.has(route.request().resourceType()) ? route.abort() : route.continue())
+    await context.route('**/*', route => {
+      const p = BLOCK.has(route.request().resourceType()) ? route.abort() : route.continue()
+      // Swallow "Target closed" rejections for requests still in flight when the
+      // browser is tearing down — otherwise they surface as an unhandled rejection.
+      if (p && p.catch) p.catch(() => {})
+    })
   }
 
   return { browser, context }

@@ -21,6 +21,16 @@ import { processSheet, detectColumns } from './pipeline.js'
 import { parseSheet, rowsToXlsxBuffer } from './xlsx.js'
 import { geminiConfigured, verifyGemini } from './gemini.js'
 
+// A stray rejection from a closing browser (stealth-plugin CDP calls, in-flight
+// request route handlers) must NEVER take down a long-running server. Log and
+// keep serving — the per-platform try/catch has already handled the real result.
+process.on('unhandledRejection', (reason) => {
+  console.error('[engine] unhandledRejection (ignored):', reason?.message || reason)
+})
+process.on('uncaughtException', (err) => {
+  console.error('[engine] uncaughtException (ignored):', err?.message || err)
+})
+
 const app = express()
 app.use(cors())
 app.use(express.json({ limit: '4mb' }))
@@ -169,7 +179,9 @@ app.listen(PORT, '0.0.0.0', async () => {
     console.log('[engine] Gemini not configured (GEMINI_API_KEY unset) — Sheet Normalizer will use LOCAL fuzzy matching.')
   } else if (v.ok) {
     console.log(`[engine] ✓ Gemini matching enabled (${v.model})`)
+  } else if (v.network) {
+    console.warn(`[engine] ⚠ couldn't reach Gemini at startup (${v.message}) — likely a transient network/AV blip. It retries per request; local matching is used only if it stays unreachable.`)
   } else {
-    console.warn(`[engine] ⚠ GEMINI_API_KEY present but REJECTED (${v.status || '?'}) — Sheet Normalizer will use LOCAL fuzzy matching. ${v.message || ''}`)
+    console.warn(`[engine] ⚠ GEMINI_API_KEY REJECTED (${v.status || '?'}) — ${v.message || ''}. Sheet Normalizer will use LOCAL fuzzy matching.`)
   }
 })

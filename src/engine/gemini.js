@@ -23,19 +23,13 @@ export function geminiConfigured() { return !!process.env.GEMINI_API_KEY }
 export async function verifyGemini() {
   if (!geminiConfigured()) return { ok: false, configured: false, message: 'GEMINI_API_KEY not set' }
   try {
-    const res = await fetch(ENDPOINT(process.env.GEMINI_API_KEY), {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: 'ping' }] }],
-        generationConfig: { maxOutputTokens: 5, thinkingConfig: { thinkingBudget: 0 } },
-      }),
-    })
+    const res = await geminiPost({ contents: [{ role: 'user', parts: [{ text: 'ping' }] }], generationConfig: { maxOutputTokens: 5, thinkingConfig: { thinkingBudget: 0 } } })
     if (res.ok) return { ok: true, configured: true, model: MODEL_ID }
     const j = await res.json().catch(() => ({}))
     return { ok: false, configured: true, status: res.status, message: j?.error?.message || `HTTP ${res.status}` }
   } catch (e) {
-    return { ok: false, configured: true, message: e.message }
+    // Network failure (e.g. AV TLS interception), not a real rejection.
+    return { ok: false, configured: true, network: true, message: `could not reach Gemini (${e.message})` }
   }
 }
 
@@ -89,18 +83,28 @@ function needsGemini({ scores }) {
   return true
 }
 
+// POST to Gemini with a small retry on transient NETWORK errors ("fetch failed"
+// — common behind a TLS-intercepting AV like Avast). HTTP errors (400/403) are
+// returned as-is (not retried — a bad key won't fix itself).
+async function geminiPost(body, attempts = 3) {
+  let lastErr
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fetch(ENDPOINT(process.env.GEMINI_API_KEY), {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
+      })
+    } catch (e) { lastErr = e; if (i < attempts - 1) await new Promise((r) => setTimeout(r, 400 * (i + 1))) }
+  }
+  throw lastErr
+}
+
 async function callGemini(input, scraped) {
-  const key = process.env.GEMINI_API_KEY
   const prompt = `INPUT ROW:\nvenue: ${input.venue || ''}\nevent: ${input.event || ''}\ndate: ${input.date || ''}\n\n`
     + `SCRAPED RESULT:\nvenue: ${scraped.venue || ''}\nevent: ${scraped.event || ''}\ndate: ${scraped.date || ''}`
-  const res = await fetch(ENDPOINT(key), {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      system_instruction: { parts: [{ text: SYSTEM }] },
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: 'application/json', temperature: 0, thinkingConfig: { thinkingBudget: 0 }, maxOutputTokens: 300 },
-    }),
+  const res = await geminiPost({
+    system_instruction: { parts: [{ text: SYSTEM }] },
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    generationConfig: { responseMimeType: 'application/json', temperature: 0, thinkingConfig: { thinkingBudget: 0 }, maxOutputTokens: 300 },
   })
   if (!res.ok) throw new Error(`gemini HTTP ${res.status}`)
   const data = await res.json()
