@@ -73,8 +73,18 @@ async function withBrowser(fn) {
   finally { await browser.close().catch(() => {}) }
 }
 
-// naive ISO (strip offset) so buildSearchUrl can append PARKWHIZ_TZ_OFFSET cleanly
-const naive = iso => String(iso || '').slice(0, 19)
+// Shift an ISO timestamp by whole hours on its LOCAL wall clock, returning a
+// naive 'YYYY-MM-DDTHH:MM:SS'. Operating on the wall time (treat the parsed
+// components as UTC, shift, reformat) preserves the date/hour the venue uses.
+function shiftNaive(iso, hours = 0) {
+  const m = String(iso || '').match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/)
+  if (!m) return String(iso || '').slice(0, 19)
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]))
+  d.setUTCHours(d.getUTCHours() + hours)
+  return d.toISOString().slice(0, 19)
+}
+// Extract a '+/-HH:MM' tz offset from an ISO string, if present.
+const tzOf = iso => (String(iso || '').match(/([+-]\d{2}:\d{2})$/) || [])[1] || null
 
 // --- public API ------------------------------------------------------------
 
@@ -100,9 +110,15 @@ export async function eventFetch({ venue, event }) {
       out.matchedEventDate = (ev.start || '').slice(0, 10)
       out.needsConfirmation = m.confidence < THRESHOLDS.confident
 
-      const start = naive(ev.start)
-      const end = ev.end ? naive(ev.end) : naive(new Date(new Date(ev.start).getTime() + 4 * 3600e3).toISOString())
-      out.listings = await fetchListings(page, buildSearchUrl(venue, start, end))
+      // Match ParkWhiz's own event page: pad the window to event ±1h and price
+      // it in the VENUE'S timezone. The exact, unpadded window in a hardcoded
+      // -04:00 offset (a) shifted non-Eastern venues hours off and (b) dragged in
+      // cheap nearby transient lots that aren't in ParkWhiz's event set — the
+      // "$3.45 cheapest" false positives that never show on parkwhiz.com.
+      const tz = tzOf(ev.start)
+      const start = shiftNaive(ev.start, -1)
+      const end = ev.end ? shiftNaive(ev.end, 1) : shiftNaive(ev.start, 5)
+      out.listings = await fetchListings(page, buildSearchUrl(venue, start, end, null, tz))
       out.status = out.listings.length ? 'ok' : 'no_listings'
       return out
     })

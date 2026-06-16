@@ -463,12 +463,13 @@ export function venueSlug(address) {
  * Build the ParkWhiz venue URL.
  * Format confirmed from live URL:
  *   /madison-square-garden-parking/?start=2026-07-15T19:00:00-04:00&end=...&daily=1
- * Timezone offset defaults to EDT (-04:00). Set PARKWHIZ_TZ_OFFSET for other zones.
+ * Timezone: pass an explicit `tz` ('+/-HH:MM' — e.g. the event's own offset) so
+ * non-Eastern venues aren't shifted; falls back to PARKWHIZ_TZ_OFFSET, then EDT.
  */
-export function buildSearchUrl(address, startTime, endTime, slug = null) {
-  const tz   = process.env.PARKWHIZ_TZ_OFFSET || '-04:00'
-  const start = encodeURIComponent(`${startTime}${tz}`)
-  const end   = encodeURIComponent(`${endTime}${tz}`)
+export function buildSearchUrl(address, startTime, endTime, slug = null, tz = null) {
+  const off   = tz || process.env.PARKWHIZ_TZ_OFFSET || '-04:00'
+  const start = encodeURIComponent(`${startTime}${off}`)
+  const end   = encodeURIComponent(`${endTime}${off}`)
   const s     = slug || venueSlug(address)
   return `https://www.parkwhiz.com/${s}/?start=${start}&end=${end}&daily=1`
 }
