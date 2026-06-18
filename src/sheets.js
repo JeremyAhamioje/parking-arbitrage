@@ -1,15 +1,15 @@
 import { google } from 'googleapis';
 import { instance as gaxiosInstance } from 'gaxios';
 
-// googleapis ships gaxios 6, which uses node-fetch — and node-fetch
-// intermittently throws ERR_STREAM_PREMATURE_CLOSE while gunzip-ing Google's
-// gzipped responses under Node 22 (broke OAuth token fetches on the VPS).
-// Forcing identity (uncompressed) encoding skips gzip entirely and sidesteps the
-// bug; the payloads here (an OAuth token, a ~50-row venue list) are tiny, so the
-// bandwidth cost is negligible. Set on BOTH the shared gaxios instance (gtoken's
-// token request) and google.options (the Sheets API calls).
-gaxiosInstance.defaults.headers = { ...(gaxiosInstance.defaults.headers || {}), 'Accept-Encoding': 'identity' };
-google.options({ headers: { 'Accept-Encoding': 'identity' } });
+// googleapis ships gaxios 6, which defaults to node-fetch — and node-fetch
+// throws ERR_STREAM_PREMATURE_CLOSE while gunzip-ing Google's gzipped responses
+// under Node 22 (broke the batch scrapers' OAuth token fetch on the VPS). Node's
+// NATIVE fetch (undici) handles the same gzip fine, so point gaxios at it via
+// fetchImplementation — on BOTH the shared instance (gtoken's token request) and
+// google.options (the Sheets API calls).
+const nativeFetch = globalThis.fetch;
+gaxiosInstance.defaults.fetchImplementation = nativeFetch;
+google.options({ fetchImplementation: nativeFetch });
 
 function getAuth() {
   return new google.auth.GoogleAuth({
