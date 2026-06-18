@@ -1,35 +1,62 @@
-import { google } from 'googleapis';
-import { instance as gaxiosInstance } from 'gaxios';
+// Google Sheets access via the REST API + a service-account JWT, using Node's
+// NATIVE fetch (undici). We deliberately do NOT use the `googleapis` library: its
+// bundled gaxios 6 / node-fetch throws ERR_STREAM_PREMATURE_CLOSE while
+// gunzip-ing Google's gzipped responses under Node 22, which broke the batch
+// scrapers on the VPS (gtoken uses its own gaxios, so it couldn't be overridden).
+// Native fetch handles the same gzip fine, so we sign the JWT ourselves and call
+// the REST endpoints directly.
+import crypto from 'crypto';
 
-// googleapis ships gaxios 6, which defaults to node-fetch — and node-fetch
-// throws ERR_STREAM_PREMATURE_CLOSE while gunzip-ing Google's gzipped responses
-// under Node 22 (broke the batch scrapers' OAuth token fetch on the VPS). Node's
-// NATIVE fetch (undici) handles the same gzip fine, so point gaxios at it via
-// fetchImplementation — on BOTH the shared instance (gtoken's token request) and
-// google.options (the Sheets API calls).
-const nativeFetch = globalThis.fetch;
-gaxiosInstance.defaults.fetchImplementation = nativeFetch;
-google.options({ fetchImplementation: nativeFetch });
+const TOKEN_URL = 'https://oauth2.googleapis.com/token';
+const API = 'https://sheets.googleapis.com/v4/spreadsheets';
+const SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 
-function getAuth() {
-  return new google.auth.GoogleAuth({
-    credentials: {
-      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    },
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+const b64url = (input) =>
+  Buffer.from(input).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+let _token = null; // { value, expMs } — cached so we don't re-auth per call
+
+async function getAccessToken() {
+  if (_token && _token.expMs > Date.now() + 60_000) return _token.value;
+  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const key = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
+  if (!email || !key) throw new Error('GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY must be set');
+
+  const now = Math.floor(Date.now() / 1000);
+  const header = b64url(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
+  const claims = b64url(JSON.stringify({ iss: email, scope: SCOPE, aud: TOKEN_URL, iat: now, exp: now + 3600 }));
+  const signature = b64url(crypto.createSign('RSA-SHA256').update(`${header}.${claims}`).sign(key));
+  const assertion = `${header}.${claims}.${signature}`;
+
+  const res = await fetch(TOKEN_URL, {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion }),
   });
+  if (!res.ok) throw new Error(`Google token error ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  const j = await res.json();
+  _token = { value: j.access_token, expMs: Date.now() + (j.expires_in || 3600) * 1000 };
+  return _token.value;
+}
+
+// Thin Sheets-REST helper, scoped to GOOGLE_SHEET_ID. `path` is appended to the
+// spreadsheet base (e.g. '' for metadata, '/values/<range>', ':batchUpdate').
+async function api(path, { method = 'GET', query, body } = {}) {
+  const token = await getAccessToken();
+  const qs = query ? `?${new URLSearchParams(query)}` : '';
+  const res = await fetch(`${API}/${process.env.GOOGLE_SHEET_ID}${path}${qs}`, {
+    method,
+    headers: { authorization: `Bearer ${token}`, ...(body ? { 'content-type': 'application/json' } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) throw new Error(`Sheets ${method} ${path} → ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  return res.json();
 }
 
 // Reads all venue names from Sheet1 column A (A2 down, skips blank rows)
 export async function readVenues() {
-  const auth = getAuth();
-  const sheets = google.sheets({ version: 'v4', auth });
-  const response = await sheets.spreadsheets.values.get({
-    spreadsheetId: process.env.GOOGLE_SHEET_ID,
-    range: 'Sheet1!A2:A51',
-  });
-  const rows = response.data.values || [];
+  const data = await api(`/values/${encodeURIComponent('Sheet1!A2:A51')}`);
+  const rows = data.values || [];
   return rows.map(r => r[0]).filter(Boolean);
 }
 
@@ -41,8 +68,6 @@ export async function readVenues() {
 export async function appendParkingListings(venueName, listings, event = null) {
   if (listings.length === 0) return;
 
-  const auth = getAuth();
-  const sheets = google.sheets({ version: 'v4', auth });
   const timestamp = new Date().toISOString();
   const eventName = event?.name || '';
   const eventDate = event?.date || '';
@@ -66,12 +91,10 @@ export async function appendParkingListings(venueName, listings, event = null) {
     l.facilityId,
   ]);
 
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: process.env.GOOGLE_SHEET_ID,
-    range: 'Listings!A:P',
-    valueInputOption: 'RAW',
-    insertDataOption: 'INSERT_ROWS',
-    requestBody: { values: rows },
+  await api(`/values/${encodeURIComponent('Listings!A:P')}:append`, {
+    method: 'POST',
+    query: { valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' },
+    body: { values: rows },
   });
 
   const label = event ? `"${event.name}" @ ${venueName}` : venueName;
@@ -79,32 +102,25 @@ export async function appendParkingListings(venueName, listings, event = null) {
 }
 
 export async function ensureListingsSheet() {
-  const auth = getAuth();
-  const sheets = google.sheets({ version: 'v4', auth });
+  const meta = await api('');
+  const exists = (meta.sheets || []).some(s => s.properties.title === 'Listings');
+  if (exists) return;
 
-  // Check if Listings tab exists
-  const meta = await sheets.spreadsheets.get({ spreadsheetId: process.env.GOOGLE_SHEET_ID });
-  const exists = meta.data.sheets.some(s => s.properties.title === 'Listings');
-
-  if (!exists) {
-    await sheets.spreadsheets.batchUpdate({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      requestBody: { requests: [{ addSheet: { properties: { title: 'Listings' } } }] },
-    });
-    // Write header row
-    await sheets.spreadsheets.values.update({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Listings!A1:P1',
-      valueInputOption: 'RAW',
-      requestBody: {
-        values: [[
-          'Timestamp', 'Venue', 'Event Name', 'Event Date',
-          'Facility Name', 'Address', 'City/State',
-          'Type', 'Advertised ($)', 'Service Fee ($)', 'Total ($)',
-          'Available Spaces', 'Available', 'Walking (m)', 'Amenities', 'Facility ID',
-        ]],
-      },
-    });
-    console.log('Created "Listings" sheet with headers.');
-  }
+  await api(':batchUpdate', {
+    method: 'POST',
+    body: { requests: [{ addSheet: { properties: { title: 'Listings' } } }] },
+  });
+  await api(`/values/${encodeURIComponent('Listings!A1:P1')}`, {
+    method: 'PUT',
+    query: { valueInputOption: 'RAW' },
+    body: {
+      values: [[
+        'Timestamp', 'Venue', 'Event Name', 'Event Date',
+        'Facility Name', 'Address', 'City/State',
+        'Type', 'Advertised ($)', 'Service Fee ($)', 'Total ($)',
+        'Available Spaces', 'Available', 'Walking (m)', 'Amenities', 'Facility ID',
+      ]],
+    },
+  });
+  console.log('Created "Listings" sheet with headers.');
 }
