@@ -12,6 +12,30 @@ function getClient() {
   return _client;
 }
 
+/**
+ * Aggressive retention prune — delete time-series scrape rows older than `days`
+ * so the database stays under Supabase's free-tier 500 MB cap. The tool is
+ * real-time-first, so a short window is enough; rolling aggregates
+ * (facility_stats) and reference tables (venues, events) are maintained
+ * incrementally and are intentionally NOT pruned. Configure with RETENTION_DAYS
+ * (default 3). Returns a { cutoff, days, summary } report of rows deleted/table.
+ */
+export async function pruneOldData(days = Number(process.env.RETENTION_DAYS || 3)) {
+  const db = getClient();
+  const cutoff = new Date(Date.now() - days * 24 * 3600 * 1000).toISOString();
+  // All three are keyed by `scraped_at`; `snapshots` is ~99% of the volume.
+  const TABLES = ['snapshots', 'facility_price_log', 'parking_snapshots'];
+  const summary = {};
+  for (const table of TABLES) {
+    const { error, count } = await db
+      .from(table)
+      .delete({ count: 'exact' })
+      .lt('scraped_at', cutoff);
+    summary[table] = error ? `error: ${error.message}` : (count ?? 0);
+  }
+  return { cutoff, days, summary };
+}
+
 export async function updateVenueDestinationId(venueId, destinationId) {
   const db = getClient();
   const { error } = await db
