@@ -13,12 +13,21 @@
 
 import { randomUUID } from 'crypto'
 import {
-  initBrowser, closeBrowser, getPage,
+  createSpotHeroContext,
   geocodeVenue, discoverDestinationAndEvents,
 } from '../../scrapers/spothero.js'
 import { bestMatch, THRESHOLDS } from '../match.js'
+import { createPagePool } from '../ctx-pool.js'
 
 const PLATFORM = 'spothero'
+
+// Warm pool of independent SpotHero contexts — reused across requests (no cold
+// boot) and lets up to SPOTHERO_POOL_MAX live fetches run in parallel.
+const pool = createPagePool({
+  name: 'spothero',
+  max: +(process.env.SPOTHERO_POOL_MAX || 2),
+  boot: createSpotHeroContext,
+})
 
 // --- in-browser API calls --------------------------------------------------
 
@@ -105,10 +114,10 @@ function mapListing(r) {
 /** Tool 1 — event-specific. Returns the unified platform-result envelope. */
 export async function eventFetch({ venue, event, date }) {
   const out = { platform: PLATFORM, status: 'error', venueConfidence: null, eventConfidence: null, matchedEvent: null, candidates: [], listings: [] }
-  let owns = false
+  const h = await pool.acquire()
+  let broken = false
   try {
-    await initBrowser(); owns = true
-    const page = getPage()
+    const page = h.page
     const { lat, lon } = await geocodeVenue(venue)
     const { destinationId } = await discoverDestinationAndEvents(venue, lat, lon)
     if (!destinationId) { out.status = 'no_destination'; return out }
@@ -132,29 +141,31 @@ export async function eventFetch({ venue, event, date }) {
     out.status = 'ok'
     return out
   } catch (e) {
+    broken = true
     out.error = e.message
     return out
   } finally {
-    if (owns) await closeBrowser().catch(() => {})
+    h.release(broken)
   }
 }
 
 /** Tool 2 — date-specific generic inventory (no event). */
 export async function dateFetch({ venue, start, end }) {
   const out = { platform: PLATFORM, status: 'error', venueConfidence: null, listings: [] }
-  let owns = false
+  const h = await pool.acquire()
+  let broken = false
   try {
-    await initBrowser(); owns = true
-    const page = getPage()
+    const page = h.page
     const { lat, lon } = await geocodeVenue(venue)
     out.venueConfidence = 100
     out.listings = await searchTransient(page, { lat, lon, starts: start, ends: end })
     out.status = 'ok'
     return out
   } catch (e) {
+    broken = true
     out.error = e.message
     return out
   } finally {
-    if (owns) await closeBrowser().catch(() => {})
+    h.release(broken)
   }
 }

@@ -47,6 +47,28 @@ export async function initBrowser() {
   await _page.goto('about:blank');
 }
 
+// Independent browser+page (NOT the module singleton) for the engine's warm
+// pool — lets multiple live fetches run concurrently without clobbering the
+// batch scraper's global page. Same fingerprint as initBrowser().
+export async function createSpotHeroContext() {
+  const browser = await chromium.launch({
+    headless: true,
+    args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+  });
+  const ctx = await browser.newContext({
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    locale: 'en-US',
+    extraHTTPHeaders: {
+      'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+    },
+  });
+  const page = await ctx.newPage();
+  await page.goto('about:blank');
+  return { browser, page };
+}
+
 export async function closeBrowser() {
   if (_browser) await _browser.close();
 }

@@ -38,14 +38,10 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 15 
 
 const PORT = process.env.PORT || process.env.ENGINE_PORT || 4000 // Render/hosts inject PORT
 
-// Single-flight: the SpotHero scraper uses a module-global page, so serialize all
-// browser-using work to one job at a time. (Production milestone → real queue.)
-let _chain = Promise.resolve()
-function serialize(fn) {
-  const run = _chain.then(fn, fn)
-  _chain = run.then(() => {}, () => {})
-  return run
-}
+// Concurrency is now bounded per-platform by warm pools (SpotHero/ParkWhiz, size
+// SPOTHERO_POOL_MAX/PARKWHIZ_POOL_MAX) and a Way mutex — so multiple fetches run
+// in parallel and queue only when a platform's pool is saturated. No global
+// single-flight needed; total browser pages cap at the sum of the pool sizes.
 
 const bad = (res, msg) => res.status(400).json({ error: msg })
 
@@ -72,7 +68,7 @@ app.post('/api/live/event', async (req, res) => {
   if (!venue || !String(venue).trim()) return bad(res, 'venue is required')
   if (!event || !String(event).trim()) return bad(res, 'event is required')
   try {
-    const result = await serialize(() => liveEventFetch({ venue: String(venue).trim(), event: String(event).trim(), date: date || null, platforms }))
+    const result = await liveEventFetch({ venue: String(venue).trim(), event: String(event).trim(), date: date || null, platforms })
     res.json(result)
   } catch (e) { res.status(500).json({ error: e.message }) }
 })
@@ -89,7 +85,7 @@ app.post('/api/live/date', async (req, res) => {
     return bad(res, 'provide start and end (YYYY-MM-DDTHH:mm), or a date (YYYY-MM-DD)')
   }
   try {
-    const result = await serialize(() => liveDateFetch({ venue: String(venue).trim(), start, end, date, platforms }))
+    const result = await liveDateFetch({ venue: String(venue).trim(), start, end, date, platforms })
     res.json(result)
   } catch (e) { res.status(500).json({ error: e.message }) }
 })
@@ -123,15 +119,15 @@ app.post('/api/pipeline/process', upload.single('file'), (req, res) => {
   const job = { status: 'queued', processed: 0, total: 0, result: null, error: null, startedAt: Date.now(), finishedAt: null }
   jobs.set(id, job)
 
-  // Not awaited — runs through the single-flight chain in the background.
-  serialize(() => {
-    job.status = 'running'
-    return processSheet(buffer, {
-      eventFetch: liveEventFetch,
-      dateFetch: liveDateFetch,
-      limit,
-      onProgress: (i, total) => { job.processed = i; job.total = total },
-    })
+  // Not awaited — the sheet processes its rows sequentially, each row's fetch
+  // sharing the same warm pools as live requests (so a sheet job and live
+  // fetches interleave instead of blocking each other).
+  job.status = 'running'
+  processSheet(buffer, {
+    eventFetch: liveEventFetch,
+    dateFetch: liveDateFetch,
+    limit,
+    onProgress: (i, total) => { job.processed = i; job.total = total },
   }).then((result) => {
     job.result = result; job.status = 'done'; job.finishedAt = Date.now()
   }).catch((err) => {

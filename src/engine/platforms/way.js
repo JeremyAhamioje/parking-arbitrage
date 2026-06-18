@@ -20,6 +20,17 @@ import { bestMatch, THRESHOLDS, similarity, confidence } from '../match.js'
 
 const PLATFORM = 'way'
 
+// Way uses a single warm Cloudflare-cleared page (booting another costs a CF
+// clear + residential bandwidth), so concurrent fetches must NOT drive it at
+// once. This mutex serializes Way work — callers queue here instead of colliding,
+// while SpotHero/ParkWhiz still run in parallel from their own pools.
+let _wayLock = Promise.resolve()
+function withWayLock(fn) {
+  const run = _wayLock.then(fn, fn)
+  _wayLock = run.then(() => {}, () => {})
+  return run
+}
+
 // Normalize a loose date to ISO YYYY-MM-DD. The sheet may carry "6/19/2026" while
 // Way returns "2026-06-19 19:30:00" — without this they never compare equal.
 function toISODate(v) {
@@ -128,7 +139,8 @@ async function searchAcrossSlugs(page, addressDto, checkin, checkout) {
 
 // --- public API ------------------------------------------------------------
 
-export async function eventFetch({ venue, event, date }) {
+export function eventFetch(q) { return withWayLock(() => _eventFetch(q)) }
+async function _eventFetch({ venue, event, date }) {
   const out = { platform: PLATFORM, status: 'error', venueConfidence: null, eventConfidence: null, matchedEvent: null, candidates: [], listings: [] }
   let page
   try { page = await getWayPage() }
@@ -190,7 +202,8 @@ export async function eventFetch({ venue, event, date }) {
   }
 }
 
-export async function dateFetch({ venue, start, end }) {
+export function dateFetch(q) { return withWayLock(() => _dateFetch(q)) }
+async function _dateFetch({ venue, start, end }) {
   const out = { platform: PLATFORM, status: 'error', venueConfidence: null, listings: [] }
   let page
   try { page = await getWayPage() }

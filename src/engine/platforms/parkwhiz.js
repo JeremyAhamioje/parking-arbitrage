@@ -15,6 +15,7 @@
 import { launchStealthContext } from '../../scrapers/_stealth.js'
 import { pickProxy, venueSlug, buildSearchUrl, extractListingsFromPageData } from '../../scrapers/parkwhiz.js'
 import { bestMatch, THRESHOLDS } from '../match.js'
+import { createPagePool } from '../ctx-pool.js'
 
 const PLATFORM = 'parkwhiz'
 const HORIZON_MS = 365 * 24 * 3600e3
@@ -65,12 +66,27 @@ async function fetchListings(page, url) {
   return extractListingsFromPageData({ data: { locations } }).map(mapListing)
 }
 
+// Warm pool of stealth contexts — reused across requests (no cold Chromium boot
+// per fetch, which was ParkWhiz's main latency) and lets up to PARKWHIZ_POOL_MAX
+// fetches run in parallel.
+const pool = createPagePool({
+  name: 'parkwhiz',
+  max: +(process.env.PARKWHIZ_POOL_MAX || 2),
+  boot: async () => {
+    const proxy = pickProxy()
+    const { browser, context } = await launchStealthContext({ proxy, headful: false })
+    const page = await context.newPage()
+    page._proxied = !!proxy
+    return { page, browser }
+  },
+})
+
 async function withBrowser(fn) {
-  const proxy = pickProxy()
-  const { browser, context } = await launchStealthContext({ proxy, headful: false })
-  const page = await context.newPage()
-  try { return await fn(page, !!proxy) }
-  finally { await browser.close().catch(() => {}) }
+  const h = await pool.acquire()
+  let broken = false
+  try { return await fn(h.page, !!h.page._proxied) }
+  catch (e) { broken = true; throw e }
+  finally { h.release(broken) }
 }
 
 // Shift an ISO timestamp by whole hours on its LOCAL wall clock, returning a
