@@ -119,7 +119,7 @@ export async function eventFetch({ venue, event, date }) {
   try {
     const page = h.page
     const { lat, lon } = await geocodeVenue(venue)
-    const { destinationId } = await discoverDestinationAndEvents(venue, lat, lon)
+    const { destinationId } = await discoverDestinationAndEvents(venue, lat, lon, page)
     if (!destinationId) { out.status = 'no_destination'; return out }
     out.venueConfidence = 100 // catalog/geo resolved
 

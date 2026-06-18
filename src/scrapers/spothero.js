@@ -103,8 +103,8 @@ export function getPage() {
  *
  * Returns { destinationId, events }. Only called when destination_id is not yet cached.
  */
-async function fetchEventCount(id) {
-  return _page.evaluate(async (i) => {
+async function fetchEventCount(page, id) {
+  return page.evaluate(async (i) => {
     try {
       const res = await fetch(`https://api.spothero.com/v2/events?destination_id=${i}`, {
         headers: { Accept: 'application/json', Referer: 'https://spothero.com/', Origin: 'https://spothero.com' },
@@ -117,7 +117,7 @@ async function fetchEventCount(id) {
   }, id);
 }
 
-export async function discoverDestinationAndEvents(venueName, lat, lon) {
+export async function discoverDestinationAndEvents(venueName, lat, lon, page = _page) {
   const catalog = getCatalog();
   if (!catalog.length) {
     console.warn('  [discover] no spothero-catalog.json — run `node discover-destinations.js` to build it; falling back to generic scrape');
@@ -128,7 +128,7 @@ export async function discoverDestinationAndEvents(venueName, lat, lon) {
   const evCache = new Map();
   const getEvents = async (id) => {
     if (evCache.has(id)) return evCache.get(id);
-    const n = await fetchEventCount(id);
+    const n = await fetchEventCount(page, id);
     evCache.set(id, n);
     return n;
   };
@@ -141,7 +141,7 @@ export async function discoverDestinationAndEvents(venueName, lat, lon) {
   console.log(`  [discover] destId=${match.id} (${match.reason}, ${match.dist}m, ${match.events} evt) → ${match.title}`);
 
   // Fetch the full upcoming events for the matched destination
-  const rawEvents = await _page.evaluate(async (id) => {
+  const rawEvents = await page.evaluate(async (id) => {
     try {
       const res = await fetch(`https://api.spothero.com/v2/events?destination_id=${id}`, {
         headers: { Accept: 'application/json', Referer: 'https://spothero.com/' },
