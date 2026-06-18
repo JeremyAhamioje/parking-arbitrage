@@ -528,11 +528,20 @@ export async function advanceDiscoveryWatermark(venueId) {
 }
 
 /**
- * Upsert a Ticketmaster event (new watermark-based approach).
+ * Upsert a Ticketmaster event (watermark-based approach).
  * Matches by ticketmaster_id to avoid duplicates.
- * Returns { eventId, isNew: boolean }
+ *
+ * `baseline` distinguishes a venue's FIRST-EVER poll from steady-state polling.
+ * On a first poll every event is technically "new to us", which would flood the
+ * UI's newly-announced feed with the venue's entire pre-existing calendar. So in
+ * baseline mode we record the events but leave first_seen_at NULL — they're known
+ * history, not fresh announcements. Only events that appear in LATER polls get a
+ * first_seen_at stamp and therefore surface as genuinely new.
+ *
+ * Returns { eventId, isNew, isFreshAnnouncement } where isFreshAnnouncement is
+ * isNew && !baseline (i.e. worth alerting on).
  */
-export async function upsertTicketmasterEventByID(venueId, event) {
+export async function upsertTicketmasterEventByID(venueId, event, { baseline = false } = {}) {
   const db = getClient();
 
   // event object: { ticketmaster_id, name, event_date, public_visibility_start, onsale_start, onsale_end, url }
@@ -545,6 +554,11 @@ export async function upsertTicketmasterEventByID(venueId, event) {
     .limit(1);
 
   const isNew = !existing || existing.length === 0;
+  const isFreshAnnouncement = isNew && !baseline;
+
+  // Only stamp first_seen_at when this is a genuine NEW announcement (not the
+  // initial baseline import, and not an update to an event we already track).
+  const firstSeenStamp = isNew ? (baseline ? null : new Date().toISOString()) : undefined;
 
   const { data, error } = await db
     .from('events')
@@ -558,7 +572,7 @@ export async function upsertTicketmasterEventByID(venueId, event) {
         onsale_start: event.onsale_start,
         onsale_end: event.onsale_end,
         source_url: event.url,
-        first_seen_at: isNew ? new Date().toISOString() : undefined,
+        first_seen_at: firstSeenStamp,
       },
       { onConflict: 'ticketmaster_id' }
     )
@@ -566,5 +580,5 @@ export async function upsertTicketmasterEventByID(venueId, event) {
 
   if (error) throw new Error(`upsertTicketmasterEventByID failed: ${error.message}`);
 
-  return { eventId: data?.[0]?.id, isNew };
+  return { eventId: data?.[0]?.id, isNew, isFreshAnnouncement };
 }

@@ -20,19 +20,69 @@ async function getVenues() {
   return data || [];
 }
 
+/** How many events we already track for a venue — 0 ⇒ this is its first poll. */
+async function existingEventCount(venueId) {
+  const { count, error } = await db
+    .from('events')
+    .select('id', { count: 'exact', head: true })
+    .eq('venue_id', venueId);
+  if (error) {
+    console.warn(`  Could not count existing events (${error.message}); treating as steady-state.`);
+    return 1; // safe default: NOT baseline, so we don't suppress real announcements
+  }
+  return count ?? 0;
+}
+
+/** Whole-day difference from now (negative = past). */
+function daysUntil(dateStr) {
+  if (!dateStr) return null;
+  const t = new Date(dateStr).getTime();
+  if (Number.isNaN(t)) return null;
+  return Math.ceil((t - Date.now()) / 86_400_000);
+}
+
 /**
- * Watermark-driven event discovery flow:
- * 1. Get all venues
- * 2. For each venue:
- *    a. Get/create discovery state (tracking last_polled_at watermark)
- *    b. Resolve venue name → Ticketmaster venue ID (once, cached)
- *    c. Query Ticketmaster for events announced since watermark
- *    d. Upsert events (deduplicated by ticketmaster_id)
- *    e. Advance watermark
- * 3. Report on genuinely new announcements
+ * Fire a single "new event announced" alert. This is the thing that makes the
+ * Discovery feature useful: a real, dated heads-up the moment a parking-relevant
+ * show is announced — the start of the "secure passes early" window. Only called
+ * for genuinely fresh announcements (not baseline imports, not re-seen events).
+ */
+async function createNewEventAlert(venue, event) {
+  const dUntil = daysUntil(event.event_date);
+  const onsale = event.onsale_start ? new Date(event.onsale_start) : null;
+  const onsaleSoon = onsale && onsale.getTime() > Date.now();
+  const onsaleHook = onsaleSoon
+    ? ` Tickets on sale ${onsale.toISOString().slice(0, 10)} — grab parking early.`
+    : '';
+
+  const { error } = await db.from('alerts').insert({
+    type: 'new_event_discovered',
+    venue_id: venue.id,
+    message: `🎟️ New ${event.segment || 'event'} at ${venue.name}: "${event.name}" on ${String(event.event_date).slice(0, 10)}${dUntil != null ? ` (${dUntil}d out)` : ''}.${onsaleHook}`,
+    metadata: {
+      source: 'ticketmaster',
+      ticketmaster_id: event.ticketmaster_id,
+      event_name: event.name,
+      event_date: event.event_date,
+      onsale_start: event.onsale_start,
+      segment: event.segment,
+      days_until: dUntil,
+      url: event.url,
+    },
+  });
+  if (error) console.warn(`    Alert insert failed: ${error.message}`);
+}
+
+/**
+ * Watermark-driven event discovery:
+ * 1. For each venue, resolve its Ticketmaster venue ID (once, cached in state).
+ * 2. Query events by EXACT venueId (no keyword/coordinate false positives).
+ * 3. Upsert deduped by ticketmaster_id. A venue's FIRST poll is baselined
+ *    (recorded but not announced); later polls surface genuinely-new events.
+ * 4. Alert on each fresh announcement, advance the watermark.
  */
 async function runDiscovery() {
-  console.log('🎟️  Starting Ticketmaster event discovery (watermark-driven)...\n');
+  console.log('🎟️  Starting Ticketmaster event discovery (watermark-driven, venueId-exact)...\n');
 
   const venues = await getVenues();
   if (venues.length === 0) {
@@ -42,64 +92,71 @@ async function runDiscovery() {
 
   console.log(`Checking ${venues.length} venue(s) for newly announced events.\n`);
 
-  let totalNewEventsAnnounced = 0;
+  let totalFresh = 0;
+  let totalBaselined = 0;
 
   for (const venue of venues) {
     console.log(`▸ ${venue.name}`);
 
     try {
-      // Step 1: Get or create discovery state (watermark)
       const state = await getOrCreateVenueDiscoveryState(venue.id);
-      console.log(`  Last polled: ${new Date(state.last_polled_at).toISOString()}`);
 
-      // Step 2: Resolve venue ID (one-time cache)
+      // Resolve venue ID (one-time cache)
       let ticketmasterVenueId = state.ticketmaster_venue_id;
       if (!ticketmasterVenueId) {
         console.log(`  Resolving venue ID...`);
         ticketmasterVenueId = await resolveVenueToTicketmasterId(venue.name);
         if (!ticketmasterVenueId) {
           console.log(`  ⚠️  Could not resolve venue to Ticketmaster ID`);
+          await advanceDiscoveryWatermark(venue.id);
           continue;
         }
         await updateDiscoveryStateVenueId(venue.id, ticketmasterVenueId);
       }
 
-      // Step 3: Query for all events at venue
-      const events = await searchEventsByVenueId(ticketmasterVenueId);
+      // Baseline mode = this venue's first-ever poll. Suppress the flood.
+      const priorCount = await existingEventCount(venue.id);
+      const baseline = priorCount === 0;
+      if (baseline) console.log(`  First poll — baselining existing calendar (no "new" alerts).`);
 
+      const events = await searchEventsByVenueId(ticketmasterVenueId);
       if (events.length === 0) {
-        console.log(`  No events found`);
+        console.log(`  No parking-relevant events found`);
         await advanceDiscoveryWatermark(venue.id);
         continue;
       }
 
-      console.log(`  Found ${events.length} event(s)`);
+      console.log(`  Found ${events.length} parking-relevant event(s)`);
 
-      // Step 4: Upsert events (deduplicated by ticketmaster_id)
-      let newCount = 0;
+      let fresh = 0;
+      let baselined = 0;
       for (const event of events) {
         try {
-          const result = await upsertTicketmasterEventByID(venue.id, event);
-          console.log(
-            `    + "${event.name}" (${event.event_date}, on-sale: ${event.onsale_start || 'TBA'})`
-          );
-          if (result.isNew) newCount++;
+          const { isFreshAnnouncement } = await upsertTicketmasterEventByID(venue.id, event, { baseline });
+          if (isFreshAnnouncement) {
+            fresh++;
+            console.log(`    ⭐ NEW "${event.name}" (${String(event.event_date).slice(0, 10)}, on-sale: ${event.onsale_start ? event.onsale_start.slice(0, 10) : 'TBA'})`);
+            await createNewEventAlert(venue, event);
+          } else if (baseline) {
+            baselined++;
+          }
         } catch (err) {
           console.error(`    Error processing event: ${err.message}`);
         }
       }
 
-      console.log(`  ⭐ ${newCount} newly discovered event(s)`);
-      totalNewEventsAnnounced += newCount;
+      if (baseline) console.log(`  Baselined ${baselined} existing event(s).`);
+      console.log(`  ⭐ ${fresh} newly announced event(s).`);
+      totalFresh += fresh;
+      totalBaselined += baselined;
 
-      // Step 5: Advance watermark
       await advanceDiscoveryWatermark(venue.id);
     } catch (err) {
       console.error(`  Error: ${err.message}`);
     }
   }
 
-  console.log(`\n✅ Discovery complete. Found ${totalNewEventsAnnounced} newly announced event(s).`);
+  console.log(`\n✅ Discovery complete. ${totalFresh} new announcement(s)${totalBaselined ? `, ${totalBaselined} baselined` : ''}.`);
 }
 
 runDiscovery().catch(err => {

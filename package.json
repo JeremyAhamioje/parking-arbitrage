@@ -10,6 +10,9 @@
     "scrape:way": "node src/scrape-way.js",
     "scrape:way:prod": "xvfb-run --auto-servernum --server-args='-screen 0 1366x768x24' node src/scrape-way.js",
     "scrape:parkwhiz": "node src/scrape-parkwhiz.js",
+    "discover": "node src/discovery.js",
+    "detect": "node src/change-detection.js",
+    "prune": "node src/prune.js",
     "engine": "node src/engine/server.js",
     "check:way": "node src/scrapers/way.js",
     "check:parkwhiz": "node src/scrapers/parkwhiz.js"

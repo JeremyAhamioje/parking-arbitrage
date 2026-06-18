@@ -1,0 +1,32 @@
+name: Discover Events
+
+# Ticketmaster event discovery. This is a pure REST job (no browser, no proxy,
+# IP-insensitive) so it's cheapest on GitHub Actions. Without this on a schedule,
+# the events table — and therefore the whole "newly announced / secure passes
+# early" feature — never updates. Every 6 hours is plenty: event announcements
+# are not minute-to-minute, and the on-sale-window lead time is days/weeks.
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # every 6 hours
+  workflow_dispatch:
+
+concurrency:
+  group: discover-events
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - name: Discover events (venueId-exact)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+        run: npm run discover

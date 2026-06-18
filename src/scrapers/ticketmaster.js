@@ -1,6 +1,14 @@
 /**
- * Ticketmaster API wrapper for event discovery.
- * Queries events by venue name or coordinates.
+ * Ticketmaster Discovery API wrapper for event discovery.
+ *
+ * IMPORTANT — we deliberately query ONLY by exact venueId. The old
+ * keyword/lat-long searches ("events near here" / "keyword = venue name") were
+ * the source of nearly every false positive: a keyword search for "Park" or a
+ * 50-mile radius pulls in unrelated shows at other rooms, and the keyword path
+ * even carried a typo (`nospäter`) that made its on-sale date permanently null.
+ * Those functions are gone. venueId is exact: every event it returns is actually
+ * AT the venue we asked about. Genuinely-new detection is handled downstream
+ * (discovery.js dedupes by ticketmaster_id and baselines a venue's first poll).
  */
 
 const API_KEY = process.env.TICKETMASTER_API_KEY;
@@ -10,95 +18,22 @@ if (!API_KEY) {
   throw new Error('TICKETMASTER_API_KEY must be set in .env');
 }
 
-/**
- * Search for events at a venue by name or coordinates.
- * Returns array of event objects: { name, date, onSaleDate, venueId, url }
- */
-export async function searchEventsByVenue(venueName, lat, lon) {
-  try {
-    // Try by venue name first
-    const response = await fetch(
-      `${BASE_URL}/events.json?keyword=${encodeURIComponent(venueName)}&apikey=${API_KEY}&size=200&sort=date,asc`,
-      { headers: { Accept: 'application/json' } }
-    );
+// Segments that actually drive parking demand. Comedy/concerts/games fill lots;
+// Film (a movie screening) and Miscellaneous (undefined) usually don't, and are
+// the bulk of the low-signal noise. Events with no classification are kept
+// (defensive — better to surface than silently drop a real arena show).
+const PARKING_SEGMENTS = new Set(['Music', 'Sports', 'Arts & Theatre']);
 
-    if (!response.ok) {
-      console.error(`Ticketmaster API error: ${response.status}`);
-      return [];
-    }
-
-    const data = await response.json();
-    const events = (data._embedded?.events || []).map(e => ({
-      name: e.name,
-      date: e.dates?.start?.dateTime || e.dates?.start?.localDate,
-      onSaleDate: e.dates?.start?.nospäter || null,
-      venueId: e._embedded?.venues?.[0]?.id,
-      venueName: e._embedded?.venues?.[0]?.name,
-      url: e.url,
-      id: e.id,
-    }));
-
-    return events;
-  } catch (error) {
-    console.error(`searchEventsByVenue error for "${venueName}":`, error.message);
-    return [];
-  }
-}
-
-/**
- * Search for events by coordinates (lat/lon) within a radius.
- * Returns array of events.
- */
-export async function searchEventsByCoordinates(lat, lon, radiusMiles = 50) {
-  try {
-    const response = await fetch(
-      `${BASE_URL}/events.json?latlong=${lat},${lon}&radius=${radiusMiles}&apikey=${API_KEY}&size=200&sort=date,asc`,
-      { headers: { Accept: 'application/json' } }
-    );
-
-    if (!response.ok) {
-      console.error(`Ticketmaster API error: ${response.status}`);
-      return [];
-    }
-
-    const data = await response.json();
-    const events = (data._embedded?.events || []).map(e => ({
-      name: e.name,
-      date: e.dates?.start?.dateTime || e.dates?.start?.localDate,
-      onSaleDate: e.dates?.start?.onSaleStartDateTime || null,
-      venueId: e._embedded?.venues?.[0]?.id,
-      venueName: e._embedded?.venues?.[0]?.name,
-      url: e.url,
-      id: e.id,
-    }));
-
-    return events;
-  } catch (error) {
-    console.error(`searchEventsByCoordinates error (${lat}, ${lon}):`, error.message);
-    return [];
-  }
-}
-
-/**
- * Batch search for events across multiple venues.
- */
-export async function searchEventsByVenues(venues) {
-  const allEvents = [];
-
-  for (const venue of venues) {
-    const events = await searchEventsByVenue(venue.name, venue.lat, venue.lon);
-    allEvents.push(...events.map(e => ({ ...e, sourceName: venue.name })));
-
-    // Rate limit: Ticketmaster allows 5000 requests/day, so space them out
-    await new Promise(resolve => setTimeout(resolve, 100));
-  }
-
-  return allEvents;
+function isParkingRelevant(segment) {
+  if (!segment) return true; // unknown → keep, let the date/venue filters decide
+  return PARKING_SEGMENTS.has(segment);
 }
 
 /**
  * Resolve a venue name to its Ticketmaster venue ID.
  * Returns the venue ID from the top search result, or null if not found.
+ * (Keyword search is acceptable HERE — we're resolving an ID once and caching
+ * it; the actual event queries below are exact-by-ID.)
  */
 export async function resolveVenueToTicketmasterId(venueName) {
   try {
@@ -130,12 +65,14 @@ export async function resolveVenueToTicketmasterId(venueName) {
 }
 
 /**
- * Search for events by Ticketmaster venue ID.
- * Returns all upcoming events (Ticketmaster API doesn't support announcement-date filtering).
- * The watermark approach: client-side, we deduplicate by ticketmaster_id.
+ * Search for events by exact Ticketmaster venue ID — the ONLY clean event path.
  *
- * @param {string} ticketmasterVenueId - Ticketmaster venue ID
- * @returns {Array} Array of normalized event objects
+ * Returns normalized, parking-relevant, non-cancelled events:
+ *   { ticketmaster_id, name, event_date, public_visibility_start,
+ *     onsale_start, onsale_end, status, segment, url }
+ *
+ * @param {string} ticketmasterVenueId
+ * @returns {Array}
  */
 export async function searchEventsByVenueId(ticketmasterVenueId) {
   try {
@@ -150,26 +87,41 @@ export async function searchEventsByVenueId(ticketmasterVenueId) {
     }
 
     const data = await response.json();
-    const events = (data._embedded?.events || []).map(e => {
-      // Extract on-sale date: prefer public on-sale, fall back to presale if earlier
-      let onSaleStart = e.sales?.public?.startDateTime || null;
-      if (e.sales?.presales && e.sales.presales.length > 0) {
-        const earliestPresale = e.sales.presales[0].startDateTime;
-        if (earliestPresale && (!onSaleStart || new Date(earliestPresale) < new Date(onSaleStart))) {
-          onSaleStart = earliestPresale;
+    const raw = data._embedded?.events || [];
+
+    const events = [];
+    for (const e of raw) {
+      const statusCode = (e.dates?.status?.code || '').toLowerCase(); // onsale|offsale|cancelled|postponed|rescheduled
+      if (statusCode === 'cancelled') continue; // a cancelled show has no parking demand — drop it
+
+      const segment = e.classifications?.[0]?.segment?.name || null;
+      if (!isParkingRelevant(segment)) continue; // Film / Miscellaneous → skip
+
+      const eventDate = e.dates?.start?.dateTime || e.dates?.start?.localDate || null;
+      if (!eventDate) continue; // undated event is unusable for our timing logic
+
+      // On-sale start: prefer the public on-sale, fall back to the earliest
+      // presale (the true "secure passes early" window opens at the presale).
+      let onsaleStart = e.sales?.public?.startDateTime || null;
+      const presales = e.sales?.presales || [];
+      for (const p of presales) {
+        if (p.startDateTime && (!onsaleStart || new Date(p.startDateTime) < new Date(onsaleStart))) {
+          onsaleStart = p.startDateTime;
         }
       }
 
-      return {
+      events.push({
         ticketmaster_id: e.id,
         name: e.name,
-        event_date: e.dates?.start?.dateTime || e.dates?.start?.localDate,
+        event_date: eventDate,
         public_visibility_start: e.sales?.public?.startDateTime || null,
-        onsale_start: onSaleStart,
+        onsale_start: onsaleStart,
         onsale_end: e.sales?.public?.endDateTime || null,
+        status: statusCode || null,
+        segment,
         url: e.url,
-      };
-    });
+      });
+    }
 
     return events;
   } catch (error) {

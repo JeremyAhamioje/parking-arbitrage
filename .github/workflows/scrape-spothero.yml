@@ -1,16 +1,28 @@
 name: Scrape SpotHero
 
-# SpotHero uses NO proxy and is quick — hourly is cheap. Note: GitHub's runner is
-# an Azure datacenter IP; if SpotHero ever rate-limits it, route through a proxy.
+# WHY this stays on GitHub Actions (not the VPS): each run executes on a FRESH
+# GitHub-hosted runner with a DIFFERENT Azure datacenter IP. That rotation is
+# exactly what defeats single-IP detection — SpotHero never sees the same address
+# scraping all 50 venues on a fixed cadence. Running it from the box's one static
+# IP every couple of hours is the pattern that WOULD get flagged, so we keep it here.
+#
+# Cadence: every 2 hours (matches the cache-first "data is fresh < ~hour" model and
+# halves Actions minutes vs hourly) + a random 0-5 min jitter so we're not a
+# clockwork on-the-hour signature. The overlap guard stops a slow run (~20-30 min
+# for 50 venues) from colliding with the next trigger.
 on:
   schedule:
-    - cron: '0 * * * *'   # top of every hour
-  workflow_dispatch:        # manual run from the Actions tab
+    - cron: '0 */2 * * *'   # every 2 hours
+  workflow_dispatch:          # manual run from the Actions tab
+
+concurrency:
+  group: scrape-spothero
+  cancel-in-progress: false
 
 jobs:
   spothero:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -18,6 +30,8 @@ jobs:
           node-version: '22'
       - run: npm install
       - run: npx playwright install --with-deps chromium
+      - name: Jitter (avoid a fixed on-the-hour fingerprint)
+        run: sleep $((RANDOM % 300))
       - name: Scrape SpotHero (50 venues)
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

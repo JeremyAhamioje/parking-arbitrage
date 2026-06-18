@@ -1,0 +1,34 @@
+name: Detect Changes
+
+# Baseline-relative change detection → price/inventory alerts. Pure DB job (reads
+# the latest snapshots, writes venue_signals + alerts), so it's cheap on Actions.
+# Without this on a schedule the alerts feature is dead — nothing ever writes a
+# signal. The SpotHero/ParkWhiz scrapes fire at even hours (0,2,4,…) + up to 5 min
+# jitter and take ~20-30 min, so detection runs at :45 of those same even hours —
+# after this run's snapshots have landed for it to compare against.
+on:
+  schedule:
+    - cron: '45 */2 * * *'   # 00:45, 02:45, 04:45 … — ~45 min after each 2h scrape
+  workflow_dispatch:
+
+concurrency:
+  group: detect-changes
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - name: Run change detection
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          # Optional tuning (defaults are sensible): ALERT_Z_THRESHOLD,
+          # ALERT_COOLDOWN_HOURS, ALERT_MIN_ABS_MOVE, ALERT_EVENT_HORIZON_DAYS, ...
+        run: npm run detect

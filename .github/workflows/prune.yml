@@ -1,0 +1,31 @@
+name: Prune Old Data
+
+# Daily retention prune so Supabase stays under the free-tier 500 MB cap. Deletes
+# time-series scrape rows older than RETENTION_DAYS (default 3); rolling aggregates
+# (facility_stats) and reference tables (venues, events) are NOT touched, so price
+# trends and the events feed survive the prune. Pure DB job — cheap on Actions.
+on:
+  schedule:
+    - cron: '0 4 * * *'   # 04:00 UTC daily
+  workflow_dispatch:
+
+concurrency:
+  group: prune
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - name: Prune old time-series rows
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RETENTION_DAYS: ${{ vars.RETENTION_DAYS }}   # optional repo Variable; defaults to 3 if unset
+        run: npm run prune

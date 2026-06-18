@@ -1,13 +1,18 @@
 name: Scrape ParkWhiz
 
 # ParkWhiz runs on the DATACENTER proxy pool (separate, larger allowance than the
-# residential one Way uses), so hourly is fine on bandwidth. Runtime is the main
-# cost — it launches a browser per venue (~10-20 min for 50). On a PRIVATE repo,
-# hourly will use a lot of your Actions minutes; widen the cron if needed.
+# residential one Way uses). Like SpotHero it stays on GitHub Actions for the
+# rotating runner IP; the proxy handles ParkWhiz's geo-WAF. Every 2 hours matches
+# the cache-first cadence and keeps Actions minutes down (it launches a browser
+# per venue, ~10-20 min for 50). Jitter + overlap guard as with SpotHero.
 on:
   schedule:
-    - cron: '0 * * * *'   # top of every hour
+    - cron: '0 */2 * * *'   # every 2 hours
   workflow_dispatch:
+
+concurrency:
+  group: scrape-parkwhiz
+  cancel-in-progress: false
 
 jobs:
   parkwhiz:
@@ -20,6 +25,8 @@ jobs:
           node-version: '22'
       - run: npm install
       - run: npx playwright install --with-deps chromium
+      - name: Jitter (avoid a fixed on-the-hour fingerprint)
+        run: sleep $((RANDOM % 300))
       - name: Scrape ParkWhiz (50 venues)
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
