@@ -62,6 +62,15 @@ app.get('/health', (_req, res) => {
   })
 })
 
+// API-key gate: when ENGINE_API_KEY is set, every /api/* call must carry a
+// matching X-API-Key header (the Vercel proxy injects it). /health stays open
+// (registered above) for uptime probes. Unset → open, for local dev.
+const API_KEY = process.env.ENGINE_API_KEY
+app.use('/api', (req, res, next) => {
+  if (!API_KEY || req.get('x-api-key') === API_KEY) return next()
+  res.status(401).json({ error: 'unauthorized' })
+})
+
 // --- Tool 1: live event fetch ---------------------------------------------
 app.post('/api/live/event', async (req, res) => {
   const { venue, event, date, platforms } = req.body || {}
