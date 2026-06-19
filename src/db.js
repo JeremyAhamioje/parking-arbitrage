@@ -401,17 +401,29 @@ export async function upsertEvent(venueId, event) {
 /**
  * Upcoming events for a venue, for event-context scraping (ParkWhiz/Way tag their
  * snapshots with these event_ids so the per-event premium/ROI analysis works for
- * all platforms, not just SpotHero). Returns the soonest `limit` events within
- * `horizonDays`. Bounds are date-only strings so they compare correctly against
- * both date-only (Ticketmaster) and timestamp (SpotHero) event_date values.
+ * all platforms, not just SpotHero). Bounds are date-only strings so they compare
+ * correctly against both date-only (Ticketmaster) and timestamp (SpotHero) values.
+ *
+ * The per-venue cost lever is DISTINCT DATES (`maxDates`), not event rows — each
+ * date is one parking scrape. The ticket feed imports many same-day variants of
+ * one game (e.g. "Yankees v Reds", "...Premium Seating", "Pinstripe Pass...") as
+ * separate events; counting rows would burn the whole budget on a single day. So
+ * we keep EVERY event that lands on one of the soonest `maxDates` distinct dates —
+ * they all get tagged off that day's single scrape. `limit` is accepted as a
+ * legacy alias for `maxDates`.
  */
-export async function getUpcomingEventsForVenue(venueId, { horizonDays = 14, limit = 4 } = {}) {
+export async function getUpcomingEventsForVenue(venueId, { horizonDays = 14, maxDates, limit } = {}) {
   const db = getClient();
+  const dateBudget = maxDates ?? limit ?? 4;
   // UTC date strings (not local-midnight → toISOString, which rolls back a day in
   // positive-offset timezones). The box runs UTC, so "today" = today's UTC date.
   const now = Date.now();
   const todayStr = new Date(now).toISOString().slice(0, 10);
   const endStr = new Date(now + horizonDays * 86_400_000).toISOString().slice(0, 10);
+  // Fetch enough soonest rows that the date budget is reachable even when the
+  // earliest days are dense with duplicate variants. Bounded so a huge horizon
+  // can't pull hundreds of rows for a daily-event venue.
+  const rowCap = Math.min(500, Math.max(60, dateBudget * 25));
   const { data, error } = await db
     .from('events')
     .select('id, event_name, event_date')
@@ -419,9 +431,22 @@ export async function getUpcomingEventsForVenue(venueId, { horizonDays = 14, lim
     .gte('event_date', todayStr)
     .lte('event_date', endStr)
     .order('event_date', { ascending: true })
-    .limit(limit);
+    .limit(rowCap);
   if (error) { console.error(`  getUpcomingEventsForVenue(${venueId}) failed: ${error.message}`); return []; }
-  return data || [];
+  // Keep all events on the soonest `dateBudget` distinct dates (rows are already
+  // date-ascending, so the first distinct dates seen are the soonest).
+  const seenDates = new Set();
+  const out = [];
+  for (const e of data || []) {
+    const d = String(e.event_date || '').slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) continue;
+    if (!seenDates.has(d)) {
+      if (seenDates.size >= dateBudget) break;
+      seenDates.add(d);
+    }
+    out.push(e);
+  }
+  return out;
 }
 
 /**

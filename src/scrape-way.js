@@ -24,12 +24,13 @@ import {
 // date (tagged with event_id) so Way feeds per-event premium/ROI. 0 disables it.
 //
 // HORIZON is a coverage window, NOT a platform limit. Cost is bounded by
-// EV_PER_VENUE (soonest N event-dates per venue), so a wider horizon doesn't add
-// fetches — it just covers venues whose next show is >10d out and starts the
-// price read earlier. EV_PER_VENUE stays small because Way fetches burn metered
-// residential bandwidth; the horizon does not.
+// EV_PER_VENUE, which counts DISTINCT event DATES (each = one scrape) — duplicate
+// same-day ticket variants don't burn it. A wider horizon adds no fetches; it
+// just lets sparse venues qualify and starts the read earlier. EV_PER_VENUE stays
+// small here because each Way fetch spends metered residential bandwidth (unlike
+// ParkWhiz, which runs free on the box IP); the horizon does not.
 const EV_PER_VENUE = parseInt(process.env.WAY_EVENTS_PER_VENUE || '3', 10)
-const EV_HORIZON   = parseInt(process.env.WAY_EVENT_HORIZON_DAYS || '30', 10)
+const EV_HORIZON   = parseInt(process.env.WAY_EVENT_HORIZON_DAYS || '730', 10)
 
 // The residential proxy-chain relay (see _stealth.js) and Cloudflare/browser
 // teardown can emit stray async errors after a venue's own try/catch has handled
@@ -109,10 +110,11 @@ async function saveListings(venue, venueId, listings, eventId = null) {
 async function scrapeEventContext(page, venue, venueId) {
   if (EV_PER_VENUE <= 0) return
   let events = []
-  try { events = await getUpcomingEventsForVenue(venueId, { horizonDays: EV_HORIZON, limit: EV_PER_VENUE }) }
+  try { events = await getUpcomingEventsForVenue(venueId, { horizonDays: EV_HORIZON, maxDates: EV_PER_VENUE }) }
   catch (e) { console.error(`  events lookup failed: ${e.message}`); return }
   if (!events.length) { console.log(`  event-context: no upcoming events within ${EV_HORIZON}d`); return }
-  console.log(`  event-context: ${events.length} upcoming event(s) within ${EV_HORIZON}d`)
+  const distinctDates = new Set(events.map(e => String(e.event_date || '').slice(0, 10))).size
+  console.log(`  event-context: ${events.length} event(s) across ${distinctDates} date(s) (≤${EV_PER_VENUE} dates, within ${EV_HORIZON}d)`)
 
   const byDate = new Map() // date → listings (scrape each day once)
   for (const ev of events) {

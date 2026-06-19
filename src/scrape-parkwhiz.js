@@ -29,13 +29,14 @@ import {
 // event's date (tagged with event_id) so ParkWhiz feeds the per-event premium/ROI
 // analysis, not just a flat nightly price. 0 disables it.
 //
-// HORIZON is a coverage window, NOT a platform limit (ParkWhiz quotes parking
-// well beyond a month out). Scrape COST is bounded by EV_PER_VENUE — we only ever
-// hit the soonest N event-dates per venue — so widening the horizon is ~free and
-// just pulls in venues whose next show is >10d away. A wider window also means we
-// start reading a show's parking earlier, which is the whole "secure early" point.
-const EV_PER_VENUE = parseInt(process.env.PARKWHIZ_EVENTS_PER_VENUE || '3', 10)
-const EV_HORIZON   = parseInt(process.env.PARKWHIZ_EVENT_HORIZON_DAYS || '30', 10)
+// HORIZON is a coverage window, NOT a platform limit (ParkWhiz quotes parking far
+// ahead). Scrape COST is bounded by EV_PER_VENUE, which counts DISTINCT event
+// DATES (each = one scrape) — duplicate same-day ticket variants don't burn it.
+// So a huge horizon is ~free: it just lets sparse venues (next show months out)
+// qualify and starts the price read earlier ("secure early"). ParkWhiz has no
+// metered-bandwidth cost and a 3h cron, so it can afford more dates than Way.
+const EV_PER_VENUE = parseInt(process.env.PARKWHIZ_EVENTS_PER_VENUE || '6', 10)
+const EV_HORIZON   = parseInt(process.env.PARKWHIZ_EVENT_HORIZON_DAYS || '730', 10)
 
 // The proxy-chain relay (see _stealth.js) and closing Chromium contexts can emit
 // stray async errors AFTER a venue's own try/catch has already handled its result
@@ -127,10 +128,11 @@ async function saveListings(venue, venueId, listings, eventId = null) {
 async function scrapeEventContext(venue, venueId) {
   if (EV_PER_VENUE <= 0) return
   let events = []
-  try { events = await getUpcomingEventsForVenue(venueId, { horizonDays: EV_HORIZON, limit: EV_PER_VENUE }) }
+  try { events = await getUpcomingEventsForVenue(venueId, { horizonDays: EV_HORIZON, maxDates: EV_PER_VENUE }) }
   catch (e) { console.error(`  events lookup failed: ${e.message}`); return }
   if (!events.length) { console.log(`  event-context: no upcoming events within ${EV_HORIZON}d`); return }
-  console.log(`  event-context: ${events.length} upcoming event(s) within ${EV_HORIZON}d`)
+  const distinctDates = new Set(events.map(e => String(e.event_date || '').slice(0, 10))).size
+  console.log(`  event-context: ${events.length} event(s) across ${distinctDates} date(s) (≤${EV_PER_VENUE} dates, within ${EV_HORIZON}d)`)
 
   const byDate = new Map() // date → listings (scrape each day once)
   for (const ev of events) {
