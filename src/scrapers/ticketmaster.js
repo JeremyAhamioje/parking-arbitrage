@@ -89,6 +89,10 @@ export async function searchEventsByVenueId(ticketmasterVenueId) {
     const data = await response.json();
     const raw = data._embedded?.events || [];
 
+    // Cutoff = start of today. Events before this have already happened — no
+    // parking demand left, so we never store them (most of the noise).
+    const cutoff = new Date(); cutoff.setHours(0, 0, 0, 0);
+
     const events = [];
     for (const e of raw) {
       const statusCode = (e.dates?.status?.code || '').toLowerCase(); // onsale|offsale|cancelled|postponed|rescheduled
@@ -99,6 +103,7 @@ export async function searchEventsByVenueId(ticketmasterVenueId) {
 
       const eventDate = e.dates?.start?.dateTime || e.dates?.start?.localDate || null;
       if (!eventDate) continue; // undated event is unusable for our timing logic
+      if (new Date(eventDate).getTime() < cutoff.getTime()) continue; // already happened → skip
 
       // On-sale start: prefer the public on-sale, fall back to the earliest
       // presale (the true "secure passes early" window opens at the presale).
