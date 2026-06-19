@@ -450,7 +450,10 @@ async function scrapeListingsFromDom(page) {
  * Override per-call via opts.slug if the derived slug is wrong.
  */
 export function venueSlug(address) {
-  const name = address.split(',')[0]         // drop city/state suffix
+  // Drop the city/state suffix, whether it's comma-separated ("MSG, New York") or
+  // dash-separated as the sheet stores it ("Yankee Stadium — New York, NY"). Only a
+  // SPACE-surrounded dash counts, so hyphenated names like "T-Mobile Arena" survive.
+  const name = String(address).split(/\s+[—–-]\s+|,/)[0]
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, ' ')            // keep only alphanumeric + spaces
     .trim()
