@@ -25,6 +25,19 @@ import {
   createScrapeRun, finalizeScrapeRun,
 } from './db.js'
 
+// The proxy-chain relay (see _stealth.js) and closing Chromium contexts can emit
+// stray async errors AFTER a venue's own try/catch has already handled its result
+// — e.g. an upstream proxy socket reset. With no handler, Node turns those into an
+// unhandledRejection/uncaughtException and kills the whole 50-venue run with exit
+// 1 (this is why ParkWhiz/Way batch jobs were failing while no-proxy SpotHero
+// passed). Log and keep going; the per-venue try/catch owns the real outcome.
+process.on('unhandledRejection', (reason) => {
+  console.error('[parkwhiz] unhandledRejection (ignored):', reason?.message || reason)
+})
+process.on('uncaughtException', (err) => {
+  console.error('[parkwhiz] uncaughtException (ignored):', err?.message || err)
+})
+
 let currentRunId = null
 let runListingCount = 0
 
@@ -196,4 +209,6 @@ async function run() {
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)) }
 
-run().catch(e => { console.error(e); process.exit(1) })
+// Exit explicitly on success so a lingering proxy-chain relay / browser handle
+// can't keep the event loop alive and hang the job to its timeout.
+run().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(1) })

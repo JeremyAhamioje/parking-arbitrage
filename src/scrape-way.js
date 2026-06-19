@@ -20,6 +20,18 @@ import {
   createScrapeRun, finalizeScrapeRun,
 } from './db.js'
 
+// The residential proxy-chain relay (see _stealth.js) and Cloudflare/browser
+// teardown can emit stray async errors after a venue's own try/catch has handled
+// its result. Without a handler, Node escalates them to unhandledRejection/
+// uncaughtException and kills the whole run with exit 1 (the cause of the failing
+// Way batch jobs). Log and keep serving — the per-venue try/catch owns the result.
+process.on('unhandledRejection', (reason) => {
+  console.error('[way] unhandledRejection (ignored):', reason?.message || reason)
+})
+process.on('uncaughtException', (err) => {
+  console.error('[way] uncaughtException (ignored):', err?.message || err)
+})
+
 let currentRunId = null
 let runListingCount = 0
 
@@ -230,4 +242,6 @@ async function run() {
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)) }
 
-run().catch(e => { console.error(e); process.exit(1) })
+// Exit explicitly on success so a lingering proxy-chain relay / browser handle
+// can't keep the event loop alive and hang the job to its timeout.
+run().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(1) })
