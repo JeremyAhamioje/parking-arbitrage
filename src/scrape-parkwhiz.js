@@ -123,20 +123,32 @@ async function scrapeEventContext(venue, venueId) {
   let events = []
   try { events = await getUpcomingEventsForVenue(venueId, { horizonDays: EV_HORIZON, limit: EV_PER_VENUE }) }
   catch (e) { console.error(`  events lookup failed: ${e.message}`); return }
-  if (!events.length) return
+  if (!events.length) { console.log(`  event-context: no upcoming events within ${EV_HORIZON}d`); return }
+  console.log(`  event-context: ${events.length} upcoming event(s) within ${EV_HORIZON}d`)
 
   const byDate = new Map() // date → listings (scrape each day once)
   for (const ev of events) {
     const date = String(ev.event_date || '').slice(0, 10)
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue
     if (!byDate.has(date)) {
+      const win = { startTime: `${date}T18:00:00`, endTime: `${date}T23:00:00` }
       let evListings = []
       try {
-        const r = await scrapeParkWhiz(venue, { startTime: `${date}T18:00:00`, endTime: `${date}T23:00:00` })
+        // We just hit this SAME venue for the generic pass; hitting it again
+        // immediately can trip the ParkWhiz WAF (single box IP, no proxy rotation
+        // → repeat-request rate-limit). One retry on a rotated proxy after a
+        // pause, mirroring the generic-pass retry, usually clears it.
+        let r = await scrapeParkWhiz(venue, win)
+        if (r.status === 'blocked') {
+          console.log(`  ◦ ${date}: WAF 403 — retrying after pause...`)
+          await _delay(2500)
+          r = await scrapeParkWhiz(venue, win)
+        }
         if (r.status === 'ok') evListings = r.listings
-      } catch { /* skip this date */ }
+        else console.log(`  ◦ ${date}: status=${r.status}${r.error ? ` — ${r.error}` : ''} (no event rows)`)
+      } catch (e) { console.log(`  ◦ ${date}: scrape threw — ${e.message}`) }
       byDate.set(date, evListings)
-      await _delay(1500)
+      await _delay(2500)
     }
     const evListings = byDate.get(date)
     if (evListings && evListings.length) {

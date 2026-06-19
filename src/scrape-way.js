@@ -106,7 +106,8 @@ async function scrapeEventContext(page, venue, venueId) {
   let events = []
   try { events = await getUpcomingEventsForVenue(venueId, { horizonDays: EV_HORIZON, limit: EV_PER_VENUE }) }
   catch (e) { console.error(`  events lookup failed: ${e.message}`); return }
-  if (!events.length) return
+  if (!events.length) { console.log(`  event-context: no upcoming events within ${EV_HORIZON}d`); return }
+  console.log(`  event-context: ${events.length} upcoming event(s) within ${EV_HORIZON}d`)
 
   const byDate = new Map() // date → listings (scrape each day once)
   for (const ev of events) {
@@ -117,7 +118,8 @@ async function scrapeEventContext(page, venue, venueId) {
       try {
         const r = await scrapeWayWithPage(page, venue, { date })
         if (r.status === 'ok') evListings = r.listings
-      } catch { /* skip this date */ }
+        else console.log(`  ◦ ${date}: status=${r.status}${r.error ? ` — ${r.error}` : ''} (no event rows)`)
+      } catch (e) { console.log(`  ◦ ${date}: scrape threw — ${e.message}`) }
       byDate.set(date, evListings)
       await _delay(1500)
     }
