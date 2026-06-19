@@ -17,8 +17,14 @@ import { initWayBrowser, scrapeWayWithPage } from './scrapers/way.js'
 import {
   upsertVenue, insertSnapshots, upsertFacilityStats,
   insertFacilityPriceLog, generateAlerts,
-  createScrapeRun, finalizeScrapeRun,
+  createScrapeRun, finalizeScrapeRun, getUpcomingEventsForVenue,
 } from './db.js'
+
+// Event context: after the generic baseline, also scrape each upcoming event's
+// date (tagged with event_id) so Way feeds per-event premium/ROI. Kept small —
+// Way spends metered residential bandwidth per fetch. 0 disables it.
+const EV_PER_VENUE = parseInt(process.env.WAY_EVENTS_PER_VENUE || '3', 10)
+const EV_HORIZON   = parseInt(process.env.WAY_EVENT_HORIZON_DAYS || '10', 10)
 
 // The residential proxy-chain relay (see _stealth.js) and Cloudflare/browser
 // teardown can emit stray async errors after a venue's own try/catch has handled
@@ -68,23 +74,58 @@ function toDbListing(l) {
 // ---------------------------------------------------------------------------
 // DB writes (mirrors saveListings in index.js — no Google Sheets write for Way)
 // ---------------------------------------------------------------------------
-async function saveListings(venue, venueId, listings) {
+async function saveListings(venue, venueId, listings, eventId = null) {
   if (!listings.length) { console.log('  No listings'); return }
 
   const dbListings = listings.map(toDbListing)
-  console.log(`  ${dbListings.length} listing(s)`)
-  dbListings.forEach(l =>
-    console.log(`    ${l.name.slice(0, 50).padEnd(50)} $${l.totalPrice.toFixed(2)}  (${(l.walkingMeters / 1609.34).toFixed(1)} mi)`)
-  )
+  if (!eventId) {
+    console.log(`  ${dbListings.length} listing(s)`)
+    dbListings.forEach(l =>
+      console.log(`    ${l.name.slice(0, 50).padEnd(50)} $${l.totalPrice.toFixed(2)}  (${(l.walkingMeters / 1609.34).toFixed(1)} mi)`)
+    )
+  }
 
   try {
-    await insertSnapshots(venueId, dbListings, null, 'way')
-    const deltas = await upsertFacilityStats(venueId, dbListings, null, 'way')
-    await insertFacilityPriceLog(currentRunId, venueId, deltas, null)
-    await generateAlerts(venueId, venue, dbListings)
+    await insertSnapshots(venueId, dbListings, eventId, 'way')
+    const deltas = await upsertFacilityStats(venueId, dbListings, eventId, 'way')
+    await insertFacilityPriceLog(currentRunId, venueId, deltas, eventId)
+    // Inline alerts off the BASELINE only — an event-day price vs the generic
+    // baseline would fire false "spike" alerts.
+    if (!eventId) await generateAlerts(venueId, venue, dbListings)
     runListingCount += dbListings.length
   } catch (e) {
     console.error(`  DB write failed: ${e.message}`)
+  }
+}
+
+// Scrape each of a venue's upcoming events (deduped by date), tagged with event_id.
+// Way reuses the shared CF-cleared page (in-page fetches), so this is cheap — but
+// it spends residential bandwidth, so EV_PER_VENUE keeps it bounded.
+async function scrapeEventContext(page, venue, venueId) {
+  if (EV_PER_VENUE <= 0) return
+  let events = []
+  try { events = await getUpcomingEventsForVenue(venueId, { horizonDays: EV_HORIZON, limit: EV_PER_VENUE }) }
+  catch (e) { console.error(`  events lookup failed: ${e.message}`); return }
+  if (!events.length) return
+
+  const byDate = new Map() // date → listings (scrape each day once)
+  for (const ev of events) {
+    const date = String(ev.event_date || '').slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue
+    if (!byDate.has(date)) {
+      let evListings = []
+      try {
+        const r = await scrapeWayWithPage(page, venue, { date })
+        if (r.status === 'ok') evListings = r.listings
+      } catch { /* skip this date */ }
+      byDate.set(date, evListings)
+      await _delay(1500)
+    }
+    const evListings = byDate.get(date)
+    if (evListings && evListings.length) {
+      console.log(`  ◦ event "${ev.event_name}" (${date}): ${evListings.length} listings`)
+      await saveListings(venue, venueId, evListings, ev.id)
+    }
   }
 }
 
@@ -225,6 +266,9 @@ async function run() {
 
       await saveListings(venue, venueId, result.listings)
       stats.ok++
+
+      // Event context: per-event-date scrapes tagged with event_id (shared page).
+      await scrapeEventContext(page, venue, venueId)
 
       // Polite inter-venue delay — Way.com uses shared Cloudflare context, no need to rush
       if (i < venues.length - 1) await _delay(2500)

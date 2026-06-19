@@ -22,8 +22,14 @@ import { scrapeParkWhiz } from './scrapers/parkwhiz.js'
 import {
   upsertVenue, insertSnapshots, upsertFacilityStats,
   insertFacilityPriceLog, generateAlerts,
-  createScrapeRun, finalizeScrapeRun,
+  createScrapeRun, finalizeScrapeRun, getUpcomingEventsForVenue,
 } from './db.js'
+
+// Event context: after the generic baseline scrape, also scrape each upcoming
+// event's date (tagged with event_id) so ParkWhiz feeds the per-event premium/ROI
+// analysis, not just a flat nightly price. 0 disables it.
+const EV_PER_VENUE = parseInt(process.env.PARKWHIZ_EVENTS_PER_VENUE || '3', 10)
+const EV_HORIZON   = parseInt(process.env.PARKWHIZ_EVENT_HORIZON_DAYS || '10', 10)
 
 // The proxy-chain relay (see _stealth.js) and closing Chromium contexts can emit
 // stray async errors AFTER a venue's own try/catch has already handled its result
@@ -84,24 +90,59 @@ function tomorrowWindow() {
 // ---------------------------------------------------------------------------
 // DB writes (mirrors saveListings in scrape-way.js — no Google Sheets for ParkWhiz)
 // ---------------------------------------------------------------------------
-async function saveListings(venue, venueId, listings) {
+async function saveListings(venue, venueId, listings, eventId = null) {
   if (!listings.length) { console.log('  No listings'); return }
 
   const dbListings = listings.map(toDbListing)
-  console.log(`  ${dbListings.length} listing(s)`)
-  dbListings.forEach(l =>
-    console.log(`    ${l.name.slice(0, 50).padEnd(50)} $${l.totalPrice.toFixed(2)}` +
-      (l.walkingMeters != null ? `  (${(l.walkingMeters / 1609.34).toFixed(1)} mi)` : ''))
-  )
+  if (!eventId) {
+    console.log(`  ${dbListings.length} listing(s)`)
+    dbListings.forEach(l =>
+      console.log(`    ${l.name.slice(0, 50).padEnd(50)} $${l.totalPrice.toFixed(2)}` +
+        (l.walkingMeters != null ? `  (${(l.walkingMeters / 1609.34).toFixed(1)} mi)` : ''))
+    )
+  }
 
   try {
-    await insertSnapshots(venueId, dbListings, null, SOURCE)
-    const deltas = await upsertFacilityStats(venueId, dbListings, null, SOURCE)
-    await insertFacilityPriceLog(currentRunId, venueId, deltas, null)
-    await generateAlerts(venueId, venue, dbListings)
+    await insertSnapshots(venueId, dbListings, eventId, SOURCE)
+    const deltas = await upsertFacilityStats(venueId, dbListings, eventId, SOURCE)
+    await insertFacilityPriceLog(currentRunId, venueId, deltas, eventId)
+    // Inline alerts off the BASELINE only — comparing an event-day price to the
+    // generic baseline would fire false "spike" alerts.
+    if (!eventId) await generateAlerts(venueId, venue, dbListings)
     runListingCount += dbListings.length
   } catch (e) {
     console.error(`  DB write failed: ${e.message}`)
+  }
+}
+
+// Scrape each of a venue's upcoming events (deduped by date) and save tagged with
+// event_id. ParkWhiz launches a browser per call, so dedup-by-date keeps the cost
+// to one scrape per distinct event day.
+async function scrapeEventContext(venue, venueId) {
+  if (EV_PER_VENUE <= 0) return
+  let events = []
+  try { events = await getUpcomingEventsForVenue(venueId, { horizonDays: EV_HORIZON, limit: EV_PER_VENUE }) }
+  catch (e) { console.error(`  events lookup failed: ${e.message}`); return }
+  if (!events.length) return
+
+  const byDate = new Map() // date → listings (scrape each day once)
+  for (const ev of events) {
+    const date = String(ev.event_date || '').slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue
+    if (!byDate.has(date)) {
+      let evListings = []
+      try {
+        const r = await scrapeParkWhiz(venue, { startTime: `${date}T18:00:00`, endTime: `${date}T23:00:00` })
+        if (r.status === 'ok') evListings = r.listings
+      } catch { /* skip this date */ }
+      byDate.set(date, evListings)
+      await _delay(1500)
+    }
+    const evListings = byDate.get(date)
+    if (evListings && evListings.length) {
+      console.log(`  ◦ event "${ev.event_name}" (${date}): ${evListings.length} listings`)
+      await saveListings(venue, venueId, evListings, ev.id)
+    }
   }
 }
 
@@ -195,6 +236,9 @@ async function run() {
 
     await saveListings(venue, venueId, result.listings)
     stats.ok++
+
+    // Event context: per-event-date scrapes tagged with event_id.
+    await scrapeEventContext(venue, venueId)
 
     // Polite inter-venue delay (each call also rotates to a new proxy IP)
     if (i < venues.length - 1) await _delay(2000)

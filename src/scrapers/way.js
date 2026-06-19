@@ -177,7 +177,7 @@ async function citySearch(page, pageName, checkin, checkout) {
  *
  * listings items: { name, price, currency, distance, rating, reviews, lat, lon, lotId, raw }
  */
-export async function scrapeWayWithPage(page, address) {
+export async function scrapeWayWithPage(page, address, opts = {}) {
   const result = {
     source: 'way.com', address, status: 'unknown',
     listings: [], cheapest: null,
@@ -219,10 +219,13 @@ export async function scrapeWayWithPage(page, address) {
     const citySlug = toSlug(city, stateCode)
     result.citySlug = citySlug
 
-    // Time window: event ±2h (event-driven inventory) or generic tomorrow 14:00–18:00
+    // Time window: an explicit event DATE (opts.date, for event-context scrapes) →
+    // that evening; else Way's own event time (autosuggest); else generic tomorrow.
     const fmt = dt => dt.toISOString().slice(0, 19).replace('T', ' ')
     let checkin, checkout
-    if (first.eventTime) {
+    if (opts.date && /^\d{4}-\d{2}-\d{2}$/.test(opts.date)) {
+      checkin = `${opts.date} 18:00:00`; checkout = `${opts.date} 22:00:00`
+    } else if (first.eventTime) {
       const evt = new Date(first.eventTime.replace(' ', 'T'))
       checkin  = fmt(new Date(evt.getTime() - 2 * 60 * 60 * 1000))
       checkout = fmt(new Date(evt.getTime() + 3 * 60 * 60 * 1000))

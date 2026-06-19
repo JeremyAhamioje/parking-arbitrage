@@ -399,6 +399,32 @@ export async function upsertEvent(venueId, event) {
 }
 
 /**
+ * Upcoming events for a venue, for event-context scraping (ParkWhiz/Way tag their
+ * snapshots with these event_ids so the per-event premium/ROI analysis works for
+ * all platforms, not just SpotHero). Returns the soonest `limit` events within
+ * `horizonDays`. Bounds are date-only strings so they compare correctly against
+ * both date-only (Ticketmaster) and timestamp (SpotHero) event_date values.
+ */
+export async function getUpcomingEventsForVenue(venueId, { horizonDays = 14, limit = 4 } = {}) {
+  const db = getClient();
+  // UTC date strings (not local-midnight → toISOString, which rolls back a day in
+  // positive-offset timezones). The box runs UTC, so "today" = today's UTC date.
+  const now = Date.now();
+  const todayStr = new Date(now).toISOString().slice(0, 10);
+  const endStr = new Date(now + horizonDays * 86_400_000).toISOString().slice(0, 10);
+  const { data, error } = await db
+    .from('events')
+    .select('id, event_name, event_date')
+    .eq('venue_id', venueId)
+    .gte('event_date', todayStr)
+    .lte('event_date', endStr)
+    .order('event_date', { ascending: true })
+    .limit(limit);
+  if (error) { console.error(`  getUpcomingEventsForVenue(${venueId}) failed: ${error.message}`); return []; }
+  return data || [];
+}
+
+/**
  * Get all previously discovered events for a venue (for diffing).
  */
 export async function getPreviousEventsSnapshot(venueId) {
