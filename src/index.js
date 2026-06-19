@@ -138,4 +138,8 @@ async function saveListings(venue, venueId, event, listings, eventId = null) {
   await appendParkingListings(venue, listings, event);
 }
 
-run().catch(console.error);
+// Fail loudly (exit 1) on a fatal error — e.g. a missing SUPABASE_URL/Sheets
+// config — instead of swallowing it. Swallowing made the Actions job report green
+// while writing nothing, which hid a missing-secret outage for a day. Per-venue
+// errors are still caught inside run() and don't reach here.
+run().catch(e => { console.error(e); process.exit(1); });
