@@ -21,10 +21,15 @@ import {
 } from './db.js'
 
 // Event context: after the generic baseline, also scrape each upcoming event's
-// date (tagged with event_id) so Way feeds per-event premium/ROI. Kept small —
-// Way spends metered residential bandwidth per fetch. 0 disables it.
+// date (tagged with event_id) so Way feeds per-event premium/ROI. 0 disables it.
+//
+// HORIZON is a coverage window, NOT a platform limit. Cost is bounded by
+// EV_PER_VENUE (soonest N event-dates per venue), so a wider horizon doesn't add
+// fetches — it just covers venues whose next show is >10d out and starts the
+// price read earlier. EV_PER_VENUE stays small because Way fetches burn metered
+// residential bandwidth; the horizon does not.
 const EV_PER_VENUE = parseInt(process.env.WAY_EVENTS_PER_VENUE || '3', 10)
-const EV_HORIZON   = parseInt(process.env.WAY_EVENT_HORIZON_DAYS || '10', 10)
+const EV_HORIZON   = parseInt(process.env.WAY_EVENT_HORIZON_DAYS || '30', 10)
 
 // The residential proxy-chain relay (see _stealth.js) and Cloudflare/browser
 // teardown can emit stray async errors after a venue's own try/catch has handled

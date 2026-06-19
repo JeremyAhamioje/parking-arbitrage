@@ -28,8 +28,14 @@ import {
 // Event context: after the generic baseline scrape, also scrape each upcoming
 // event's date (tagged with event_id) so ParkWhiz feeds the per-event premium/ROI
 // analysis, not just a flat nightly price. 0 disables it.
+//
+// HORIZON is a coverage window, NOT a platform limit (ParkWhiz quotes parking
+// well beyond a month out). Scrape COST is bounded by EV_PER_VENUE — we only ever
+// hit the soonest N event-dates per venue — so widening the horizon is ~free and
+// just pulls in venues whose next show is >10d away. A wider window also means we
+// start reading a show's parking earlier, which is the whole "secure early" point.
 const EV_PER_VENUE = parseInt(process.env.PARKWHIZ_EVENTS_PER_VENUE || '3', 10)
-const EV_HORIZON   = parseInt(process.env.PARKWHIZ_EVENT_HORIZON_DAYS || '10', 10)
+const EV_HORIZON   = parseInt(process.env.PARKWHIZ_EVENT_HORIZON_DAYS || '30', 10)
 
 // The proxy-chain relay (see _stealth.js) and closing Chromium contexts can emit
 // stray async errors AFTER a venue's own try/catch has already handled its result
