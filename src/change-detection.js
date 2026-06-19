@@ -264,7 +264,10 @@ async function runChangeDetection() {
       const message = `${icon} ${data.venueName} — ${data.lotAddress}: ${core}.${eventHook}`
 
       const { error: alertErr } = await db.from('alerts').insert({
-        type: signalType === 'HIGH_PROFILE' ? 'HIGH_PROFILE' : isPriceSpike ? 'PRICE_SPIKE' : 'INVENTORY_DROP',
+        // alerts.type is the alert_type enum (price_spike|availability_drop|new_event|
+        // price_drop). The richer HIGH_PROFILE/PRICE_SPIKE/INVENTORY_DROP label lives
+        // in metadata.signal_type + venue_signals.signal_type (free text).
+        type: isPriceSpike ? 'price_spike' : 'availability_drop',
         venue_id: null,
         message,
         metadata: {

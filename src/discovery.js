@@ -33,6 +33,16 @@ async function existingEventCount(venueId) {
   return count ?? 0;
 }
 
+/**
+ * Venue names in our DB carry a " — City, ST" suffix (e.g. "Dodger Stadium —
+ * Los Angeles, CA"), which breaks Ticketmaster's keyword venue lookup. Strip it
+ * to the bare venue name for resolution. Only splits on a space-surrounded dash,
+ * so names like "T-Mobile Arena" are left intact.
+ */
+function cleanVenueForSearch(name) {
+  return String(name).split(/\s+[—–-]\s+/)[0].trim();
+}
+
 /** Whole-day difference from now (negative = past). */
 function daysUntil(dateStr) {
   if (!dateStr) return null;
@@ -56,7 +66,7 @@ async function createNewEventAlert(venue, event) {
     : '';
 
   const { error } = await db.from('alerts').insert({
-    type: 'new_event_discovered',
+    type: 'new_event', // must match the alert_type enum (price_spike|availability_drop|new_event|price_drop)
     venue_id: venue.id,
     message: `🎟️ New ${event.segment || 'event'} at ${venue.name}: "${event.name}" on ${String(event.event_date).slice(0, 10)}${dUntil != null ? ` (${dUntil}d out)` : ''}.${onsaleHook}`,
     metadata: {
@@ -105,7 +115,7 @@ async function runDiscovery() {
       let ticketmasterVenueId = state.ticketmaster_venue_id;
       if (!ticketmasterVenueId) {
         console.log(`  Resolving venue ID...`);
-        ticketmasterVenueId = await resolveVenueToTicketmasterId(venue.name);
+        ticketmasterVenueId = await resolveVenueToTicketmasterId(cleanVenueForSearch(venue.name));
         if (!ticketmasterVenueId) {
           console.log(`  ⚠️  Could not resolve venue to Ticketmaster ID`);
           await advanceDiscoveryWatermark(venue.id);
