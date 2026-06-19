@@ -1,12 +1,10 @@
 name: Scrape Way
 
-# Way uses the RESIDENTIAL proxy (metered — ~1 GB/mo on the free Webshare tier).
-# Each run boots the way.com SPA through residential, so hourly (~24/day) would
-# blow the cap (~3 GB/mo). Every 6 hours keeps it comfortably under. To go hourly,
-# change the cron to '0 * * * *' AND upgrade your residential bandwidth.
+# MOVED TO THE BOX (scripts/box-cron). Way's residential proxy refuses GitHub's
+# runner IP (net::ERR_TUNNEL_CONNECTION_FAILED), so this job couldn't boot the
+# browser from Actions. It now runs from the box, where the residential proxy works
+# (same path the live engine uses). Kept manual-only as a fallback/reference.
 on:
-  schedule:
-    - cron: '0 */6 * * *'   # every 6 hours (residential bandwidth)
   workflow_dispatch:
 
 jobs:

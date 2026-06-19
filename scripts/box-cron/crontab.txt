@@ -1,0 +1,8 @@
+# >>> parking-box-cron >>>
+# ParkWhiz + Way scrapers on the box. Times are UTC. SpotHero stays on GitHub Actions.
+# Install/refresh with: scripts/box-cron/install.sh
+# ParkWhiz every 3h (box US IP clears the WAF — no proxy).
+0 */3 * * *   /opt/parking-arbitrage/scripts/box-cron/scrape.sh parkwhiz
+# Way every 6h, offset 30m so it never overlaps ParkWhiz (residential bandwidth).
+30 */6 * * *  /opt/parking-arbitrage/scripts/box-cron/scrape.sh way
+# <<< parking-box-cron <<<

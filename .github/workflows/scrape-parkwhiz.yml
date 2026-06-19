@@ -1,13 +1,9 @@
 name: Scrape ParkWhiz
 
-# ParkWhiz runs on the DATACENTER proxy pool (separate, larger allowance than the
-# residential one Way uses). Like SpotHero it stays on GitHub Actions for the
-# rotating runner IP; the proxy handles ParkWhiz's geo-WAF. Every 2 hours matches
-# the cache-first cadence and keeps Actions minutes down (it launches a browser
-# per venue, ~10-20 min for 50). Jitter + overlap guard as with SpotHero.
+# MOVED TO THE BOX (scripts/box-cron). ParkWhiz's WAF 403s GitHub's datacenter
+# runner IP, so this job wrote 0 rows from Actions. It now runs from the box on its
+# own US IP. This workflow is kept manual-only as a fallback/reference.
 on:
-  schedule:
-    - cron: '0 */2 * * *'   # every 2 hours
   workflow_dispatch:
 
 concurrency:
