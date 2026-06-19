@@ -23,15 +23,32 @@ function getClient() {
 export async function pruneOldData(days = Number(process.env.RETENTION_DAYS || 3)) {
   const db = getClient();
   const cutoff = new Date(Date.now() - days * 24 * 3600 * 1000).toISOString();
-  // All three are keyed by `scraped_at`; `snapshots` is ~99% of the volume.
-  const TABLES = ['snapshots', 'facility_price_log', 'parking_snapshots'];
+  // Both keyed by `scraped_at`; `snapshots` is ~99% of the volume. (parking_snapshots
+  // is intentionally omitted — it was never created in prod.)
+  const TABLES = ['snapshots', 'facility_price_log'];
+  // Delete in batches: one DELETE of a large backlog can blow Postgres' statement
+  // timeout and throw (which previously failed the whole Actions job). Selecting +
+  // deleting a bounded id set per round keeps every statement small and the URL
+  // short, and a per-table try/catch means one table's hiccup can't abort the run.
+  const BATCH = Number(process.env.PRUNE_BATCH || 200);
   const summary = {};
   for (const table of TABLES) {
-    const { error, count } = await db
-      .from(table)
-      .delete({ count: 'exact' })
-      .lt('scraped_at', cutoff);
-    summary[table] = error ? `error: ${error.message}` : (count ?? 0);
+    let removed = 0;
+    try {
+      for (let i = 0; i < 100_000; i++) { // hard cap; breaks when no old rows remain
+        const { data: rows, error: selErr } = await db
+          .from(table).select('id').lt('scraped_at', cutoff).limit(BATCH);
+        if (selErr) throw new Error(selErr.message);
+        if (!rows || rows.length === 0) break;
+        const { error: delErr } = await db.from(table).delete().in('id', rows.map(r => r.id));
+        if (delErr) throw new Error(delErr.message);
+        removed += rows.length;
+        if (rows.length < BATCH) break;
+      }
+      summary[table] = removed;
+    } catch (e) {
+      summary[table] = `error after ${removed}: ${e.message}`;
+    }
   }
   return { cutoff, days, summary };
 }
