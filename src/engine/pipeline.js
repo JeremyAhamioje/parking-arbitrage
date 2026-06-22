@@ -39,13 +39,17 @@ const SPOT_PLATFORMS = [
   { key: 'way', label: 'Way' },
 ]
 
-// Enriched column names we append (metric-major: all "Spot Price" together, etc.).
+// Enriched column names we append. Platform-major: each platform's columns are
+// grouped together so its spot sits right beside its price (e.g. "Live Spot
+// SpotHero" | "Live Spot Price SpotHero"), instead of all prices then all spots.
 // Suffixed if they'd collide with an original header.
 const ENRICHED = [
-  ...SPOT_PLATFORMS.map(p => `Live Spot Price ${p.label}`),
-  ...SPOT_PLATFORMS.map(p => `Live Spot ${p.label}`),
-  ...SPOT_PLATFORMS.map(p => `Spot Match ${p.label}`),
-  ...SPOT_PLATFORMS.map(p => `Live Low Price ${p.label}`),
+  ...SPOT_PLATFORMS.flatMap(p => [
+    `Live Spot ${p.label}`,
+    `Live Spot Price ${p.label}`,
+    `Live Low Price ${p.label}`,
+    `Spot Match ${p.label}`,
+  ]),
   'Matched Event', 'Match Confidence', 'Match Status', 'Error Flag', 'Platforms', 'Fetched At',
 ]
 
