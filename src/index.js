@@ -32,7 +32,14 @@ async function run() {
     console.error(`Could not create scrape run (price log will be ungrouped): ${e.message}`);
   }
 
-  await ensureListingsSheet();
+  // Legacy Sheets mirror — must not gate the scrape. If the tab can't be ensured
+  // (auth, cell limit, API down), warn and carry on; the per-venue appends are
+  // already non-fatal and Supabase is the source of truth.
+  try {
+    await ensureListingsSheet();
+  } catch (e) {
+    console.error(`Could not ensure Listings sheet (non-fatal): ${e.message}`);
+  }
   console.log('Launching browser...');
   await initBrowser();
 
