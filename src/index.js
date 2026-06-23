@@ -134,8 +134,15 @@ async function saveListings(venue, venueId, event, listings, eventId = null) {
     console.error(`    DB write failed: ${e.message}`);
   }
 
-  // Google Sheets
-  await appendParkingListings(venue, listings, event);
+  // Google Sheets — a LEGACY MIRROR; Supabase (above) is the source of truth.
+  // Isolated so a Sheets failure (e.g. the tab hitting Google's cell limit) logs
+  // and continues instead of propagating up and aborting the whole run + every
+  // venue after it. The DB already has this venue's data.
+  try {
+    await appendParkingListings(venue, listings, event);
+  } catch (e) {
+    console.error(`    Sheets append failed (non-fatal): ${e.message}`);
+  }
 }
 
 // Fail loudly (exit 1) on a fatal error — e.g. a missing SUPABASE_URL/Sheets
