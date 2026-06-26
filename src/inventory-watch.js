@@ -192,6 +192,7 @@ export async function detectInventoryDrops({ source, sinceMs, dryRun = false }) 
             spaces_before: prev.available_spaces ?? null,
             spaces_after: curr ? (curr.available_spaces ?? 0) : null,
             was_available: true, now_available: false,
+            context: 'event', category: 'sold_out', // sold-out is always event-context
             prev_scraped_at: prev.scraped_at, new_scraped_at: curr?.scraped_at || sinceIso,
           },
         }, `🚫 SOLD OUT [${PLAT_LABEL[source] || source}] ${venueName} — ${lot} · ${evName} (${evDateStr})`)
@@ -232,6 +233,7 @@ export async function detectInventoryDrops({ source, sinceMs, dryRun = false }) 
               signal_type: 'INVENTORY_THINNING',
               event_id: eventId, event_name: evName, event_date: ev?.event_date || null, event_days_until: dLeft,
               spaces_before: pb, spaces_after: ca, spaces_change_pct: parseFloat((-dropPct).toFixed(1)),
+              context: 'event', category: 'thinning', // event-context by construction
               prev_scraped_at: prev.scraped_at, new_scraped_at: curr.scraped_at,
             },
           }, `⚠️ THINNING [SpotHero] ${venueName} — ${lot} ${pb}→${ca} · ${evName}`)
