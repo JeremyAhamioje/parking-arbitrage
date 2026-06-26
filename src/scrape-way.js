@@ -98,7 +98,7 @@ async function saveListings(venue, venueId, listings, eventId = null) {
     await insertFacilityPriceLog(currentRunId, venueId, deltas, eventId)
     // Inline alerts off the BASELINE only — an event-day price vs the generic
     // baseline would fire false "spike" alerts.
-    if (!eventId) await generateAlerts(venueId, venue, dbListings)
+    if (!eventId) await generateAlerts(venueId, venue, dbListings, { source: 'way', eventId })
     runListingCount += dbListings.length
   } catch (e) {
     console.error(`  DB write failed: ${e.message}`)

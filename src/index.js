@@ -142,7 +142,7 @@ async function saveListings(venue, venueId, event, listings, eventId = null) {
     // upsertFacilityStats computes the per-facility deltas; reuse them for the price log.
     const deltas = await upsertFacilityStats(venueId, listings, eventId, 'spothero');
     await insertFacilityPriceLog(currentRunId, venueId, deltas, eventId);
-    await generateAlerts(venueId, venue, listings);
+    await generateAlerts(venueId, venue, listings, { source: 'spothero', eventId });
     runListingCount += listings.length;
   } catch (e) {
     console.error(`    DB write failed: ${e.message}`);

@@ -307,8 +307,15 @@ export async function insertFacilityPriceLog(runId, venueId, deltas, eventId = n
  *
  * "Significant" = price up by $5+ or available_spaces dropped by 50%+
  */
-export async function generateAlerts(venueId, venueName, listings) {
+// Noise control: only alert on meaningful moves (was a flat $5). BOTH floors must
+// clear, so trivial wiggles don't flood the feed. Tunable via env.
+const ALERT_MIN_MOVE_ABS = parseFloat(process.env.ALERT_MIN_MOVE_ABS || '12');
+const ALERT_MIN_MOVE_PCT = parseFloat(process.env.ALERT_MIN_MOVE_PCT || '20');
+
+export async function generateAlerts(venueId, venueName, listings, opts = {}) {
   const db = getClient();
+  const source = opts.source || null;
+  const context = opts.eventId ? 'event' : 'generic'; // event-context scrape vs generic
   const alerts = [];
 
   for (const l of listings) {
@@ -325,42 +332,41 @@ export async function generateAlerts(venueId, venueName, listings) {
 
     const [current, previous] = history;
     const priceDelta = current.total_price - previous.total_price;
+    const pricePct = previous.total_price > 0 ? (priceDelta / previous.total_price) * 100 : 0;
+    // Meaningful only if it clears BOTH an absolute and a percent floor.
+    const meaningful = Math.abs(priceDelta) >= ALERT_MIN_MOVE_ABS && Math.abs(pricePct) >= ALERT_MIN_MOVE_PCT;
 
-    if (priceDelta >= 5) {
+    // Shared metadata: source + context (event/generic) drive the UI filters and
+    // the provenance label; the scrape times drive the run-window display.
+    const baseMeta = {
+      prev_price: previous.total_price,
+      new_price: current.total_price,
+      delta: priceDelta,
+      change_pct: parseFloat(pricePct.toFixed(1)),
+      facility_name: l.name,
+      source,
+      context,
+      prev_scraped_at: previous.scraped_at,
+      new_scraped_at: current.scraped_at,
+    };
+
+    if (meaningful && priceDelta > 0) {
       alerts.push({
         type: 'price_spike',
         venue_id: venueId,
         facility_id: String(l.facilityId),
-        message: `${venueName} — ${l.name}: price jumped $${priceDelta.toFixed(2)} ($${previous.total_price} → $${current.total_price})`,
-        metadata: {
-          prev_price: previous.total_price,
-          new_price: current.total_price,
-          delta: priceDelta,
-          facility_name: l.name,
-          // The two runs being compared — lets the UI show the real window
-          // (prev run → this run) instead of a vague "just now".
-          prev_scraped_at: previous.scraped_at,
-          new_scraped_at: current.scraped_at,
-        },
+        message: `${venueName} — ${l.name}: price jumped $${priceDelta.toFixed(2)} (${pricePct.toFixed(0)}%, $${previous.total_price} → $${current.total_price})`,
+        metadata: { ...baseMeta, category: 'price_spike' },
       });
     }
 
-    if (priceDelta <= -5) {
+    if (meaningful && priceDelta < 0) {
       alerts.push({
         type: 'price_drop',
         venue_id: venueId,
         facility_id: String(l.facilityId),
-        message: `${venueName} — ${l.name}: price dropped $${Math.abs(priceDelta).toFixed(2)} ($${previous.total_price} → $${current.total_price})`,
-        metadata: {
-          prev_price: previous.total_price,
-          new_price: current.total_price,
-          delta: priceDelta,
-          facility_name: l.name,
-          // The two runs being compared — lets the UI show the real window
-          // (prev run → this run) instead of a vague "just now".
-          prev_scraped_at: previous.scraped_at,
-          new_scraped_at: current.scraped_at,
-        },
+        message: `${venueName} — ${l.name}: price dropped $${Math.abs(priceDelta).toFixed(2)} (${Math.abs(pricePct).toFixed(0)}%, $${previous.total_price} → $${current.total_price})`,
+        metadata: { ...baseMeta, category: 'price_drop' },
       });
     }
 
@@ -372,7 +378,7 @@ export async function generateAlerts(venueId, venueName, listings) {
         venue_id: venueId,
         facility_id: String(l.facilityId),
         message: `${venueName} — ${l.name}: spaces dropped from ${prevSpaces} to ${currSpaces}`,
-        metadata: { prev_spaces: prevSpaces, new_spaces: currSpaces, facility_name: l.name, prev_scraped_at: previous.scraped_at, new_scraped_at: current.scraped_at },
+        metadata: { prev_spaces: prevSpaces, new_spaces: currSpaces, facility_name: l.name, source, context, category: 'inventory_drop', prev_scraped_at: previous.scraped_at, new_scraped_at: current.scraped_at },
       });
     }
   }
