@@ -174,6 +174,7 @@ async function runChangeDetection() {
           event_name: ev?.name || null,
           event_date: ev?.date || null,
           event_days_until: ev?.daysUntil ?? null,
+          new_scraped_at: f.last_scraped_at, // the "after" run (no exact "before" — z-score over history)
         },
       })
       if (error) { console.error(`  alert insert failed (${venueName} / ${f.facility_id}): ${error.message}`); continue }

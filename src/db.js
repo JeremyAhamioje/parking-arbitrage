@@ -337,6 +337,10 @@ export async function generateAlerts(venueId, venueName, listings) {
           new_price: current.total_price,
           delta: priceDelta,
           facility_name: l.name,
+          // The two runs being compared — lets the UI show the real window
+          // (prev run → this run) instead of a vague "just now".
+          prev_scraped_at: previous.scraped_at,
+          new_scraped_at: current.scraped_at,
         },
       });
     }
@@ -352,6 +356,10 @@ export async function generateAlerts(venueId, venueName, listings) {
           new_price: current.total_price,
           delta: priceDelta,
           facility_name: l.name,
+          // The two runs being compared — lets the UI show the real window
+          // (prev run → this run) instead of a vague "just now".
+          prev_scraped_at: previous.scraped_at,
+          new_scraped_at: current.scraped_at,
         },
       });
     }
@@ -364,7 +372,7 @@ export async function generateAlerts(venueId, venueName, listings) {
         venue_id: venueId,
         facility_id: String(l.facilityId),
         message: `${venueName} — ${l.name}: spaces dropped from ${prevSpaces} to ${currSpaces}`,
-        metadata: { prev_spaces: prevSpaces, new_spaces: currSpaces, facility_name: l.name },
+        metadata: { prev_spaces: prevSpaces, new_spaces: currSpaces, facility_name: l.name, prev_scraped_at: previous.scraped_at, new_scraped_at: current.scraped_at },
       });
     }
   }
