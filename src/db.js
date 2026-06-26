@@ -53,6 +53,57 @@ export async function pruneOldData(days = Number(process.env.RETENTION_DAYS || 3
   return { cutoff, days, summary };
 }
 
+/**
+ * Retention prune for the `alerts` table — pruneOldData() only deletes by
+ * scraped_at, so alerts (keyed by created_at) were never pruned and grew
+ * unbounded (150k+ rows, mostly low-value price moves). Tiered: the noise
+ * (everything that isn't a sold-out signal) gets a short window; SOLD_OUT /
+ * INVENTORY_THINNING are the high-value ones and are kept far longer. Batched
+ * deletes keep each statement small (same reasoning as pruneOldData). Configure
+ * with ALERT_RETENTION_DAYS (default 14) and ALERT_SOLDOUT_RETENTION_DAYS (60).
+ */
+export async function pruneOldAlerts({
+  days = Number(process.env.ALERT_RETENTION_DAYS || 14),
+  soldoutDays = Number(process.env.ALERT_SOLDOUT_RETENTION_DAYS || 60),
+} = {}) {
+  const db = getClient();
+  const BATCH = Number(process.env.PRUNE_BATCH || 200);
+  const shortCutoff = new Date(Date.now() - days * 24 * 3600 * 1000).toISOString();
+  const longCutoff = new Date(Date.now() - soldoutDays * 24 * 3600 * 1000).toISOString();
+
+  // Delete a filtered set of alerts in bounded batches (select ids → delete by id).
+  async function deleteBatched(applyFilter) {
+    let removed = 0;
+    for (let i = 0; i < 100_000; i++) {
+      const { data: rows, error: selErr } = await applyFilter(db.from('alerts').select('id').limit(BATCH));
+      if (selErr) throw new Error(selErr.message);
+      if (!rows || rows.length === 0) break;
+      const { error: delErr } = await db.from('alerts').delete().in('id', rows.map(r => r.id));
+      if (delErr) throw new Error(delErr.message);
+      removed += rows.length;
+      if (rows.length < BATCH) break;
+    }
+    return removed;
+  }
+
+  const summary = {};
+  // The noise: everything that isn't a sold-out signal (null signal_type included)
+  // — short retention.
+  try {
+    summary.noise = await deleteBatched(q => q
+      .lt('created_at', shortCutoff)
+      .or('metadata->>signal_type.is.null,metadata->>signal_type.not.in.(SOLD_OUT,INVENTORY_THINNING)'));
+  } catch (e) { summary.noise = `error: ${e.message}`; }
+  // Sold-out / thinning — the high-value alerts, kept far longer.
+  try {
+    summary.soldout = await deleteBatched(q => q
+      .lt('created_at', longCutoff)
+      .or('metadata->>signal_type.eq.SOLD_OUT,metadata->>signal_type.eq.INVENTORY_THINNING'));
+  } catch (e) { summary.soldout = `error: ${e.message}`; }
+
+  return { shortCutoff, longCutoff, days, soldoutDays, summary };
+}
+
 export async function updateVenueDestinationId(venueId, destinationId) {
   const db = getClient();
   const { error } = await db
