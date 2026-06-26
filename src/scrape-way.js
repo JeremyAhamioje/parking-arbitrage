@@ -19,6 +19,7 @@ import {
   insertFacilityPriceLog, generateAlerts,
   createScrapeRun, finalizeScrapeRun, getUpcomingEventsForVenue,
 } from './db.js'
+import { detectInventoryDrops } from './inventory-watch.js'
 
 // Event context: after the generic baseline, also scrape each upcoming event's
 // date (tagged with event_id) so Way feeds per-event premium/ROI. 0 disables it.
@@ -142,6 +143,7 @@ async function scrapeEventContext(page, venue, venueId) {
 // Main
 // ---------------------------------------------------------------------------
 async function run() {
+  const RUN_START = Date.now() // rows scraped_at >= this are "this run" for the sold-out diff
   // --- Load venue list ---
   let venues = await readVenues()
   if (!venues.length) {
@@ -285,6 +287,9 @@ async function run() {
   } finally {
     await browser?.close().catch(() => {})
   }
+
+  // Sold-out / depletion watch (non-fatal) — alert on lots that just sold out.
+  await detectInventoryDrops({ source: 'way', sinceMs: RUN_START })
 
   await finalizeScrapeRun(currentRunId, { venueCount: venues.length, listingCount: runListingCount })
 

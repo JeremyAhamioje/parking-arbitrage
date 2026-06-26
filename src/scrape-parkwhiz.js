@@ -24,6 +24,7 @@ import {
   insertFacilityPriceLog, generateAlerts,
   createScrapeRun, finalizeScrapeRun, getUpcomingEventsForVenue,
 } from './db.js'
+import { detectInventoryDrops } from './inventory-watch.js'
 
 // Event context: after the generic baseline scrape, also scrape each upcoming
 // event's date (tagged with event_id) so ParkWhiz feeds the per-event premium/ROI
@@ -170,6 +171,7 @@ async function scrapeEventContext(venue, venueId) {
 // Main
 // ---------------------------------------------------------------------------
 async function run() {
+  const RUN_START = Date.now() // rows scraped_at >= this are "this run" for the sold-out diff
   let venues = await readVenues()
   if (!venues.length) {
     console.error('No venues found in Sheet1 column A (A2:A51).')
@@ -263,6 +265,9 @@ async function run() {
     // Polite inter-venue delay (each call also rotates to a new proxy IP)
     if (i < venues.length - 1) await _delay(2000)
   }
+
+  // Sold-out / depletion watch (non-fatal) — alert on lots that just sold out.
+  await detectInventoryDrops({ source: 'parkwhiz', sinceMs: RUN_START })
 
   await finalizeScrapeRun(currentRunId, { venueCount: venues.length, listingCount: runListingCount })
 

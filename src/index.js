@@ -3,12 +3,15 @@ import { readVenues, appendParkingListings, ensureListingsSheet } from './sheets
 import { scrapeSpotHero, initBrowser, closeBrowser, getCoords, getPage, discoverDestinationAndEvents, cacheDestinationId } from './scrapers/spothero.js';
 import { getSpotHeroEvents } from './scrapers/events.js';
 import { upsertVenue, insertSnapshots, generateAlerts, upsertEvent, updateVenueDestinationId, upsertFacilityStats, createScrapeRun, finalizeScrapeRun, insertFacilityPriceLog } from './db.js';
+import { detectInventoryDrops } from './inventory-watch.js';
 
 // Set once per execution; every facility_price_log row from this run is tagged with it.
 let currentRunId = null;
 let runListingCount = 0;
 
 async function run() {
+  // Run start — rows scraped_at >= this are "this run" for the sold-out diff.
+  const RUN_START = Date.now();
   let venues = await readVenues();
   if (venues.length === 0) {
     console.error('No venues found in Sheet1 column A (A2:A51).');
@@ -113,6 +116,10 @@ async function run() {
   } finally {
     await closeBrowser();
   }
+
+  // Sold-out / depletion watch: diff this run's event availability vs the last
+  // run and alert on lots that just sold out (non-fatal).
+  await detectInventoryDrops({ source: 'spothero', sinceMs: RUN_START });
 
   await finalizeScrapeRun(currentRunId, { venueCount: venues.length, listingCount: runListingCount });
 
