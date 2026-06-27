@@ -20,6 +20,8 @@ import { liveEventFetch, liveDateFetch } from './live.js'
 import { processSheet, detectColumns } from './pipeline.js'
 import { parseSheet, rowsToXlsxBuffer } from './xlsx.js'
 import { geminiConfigured, verifyGemini } from './gemini.js'
+import { addVenue } from '../sheets.js'
+import { upsertVenue } from '../db.js'
 
 // A stray rejection from a closing browser (stealth-plugin CDP calls, in-flight
 // request route handlers) must NEVER take down a long-running server. Log and
@@ -96,6 +98,42 @@ app.post('/api/live/date', async (req, res) => {
   try {
     const result = await liveDateFetch({ venue: String(venue).trim(), start, end, date, platforms })
     res.json(result)
+  } catch (e) { res.status(500).json({ error: e.message }) }
+})
+
+// --- Add venue: validate it's real, dedupe, append to the tracking sheet ---
+// Open submission but gated: the name must geocode to a real place (filters typos
+// /junk) and not already be tracked, before it's committed to permanent scraping.
+// Appending to the sheet → the scrapers pick it up on their next run. We also seed
+// the venues table so it appears in the UI right away (no pricing until scraped).
+async function geocodeVenue(q) {
+  try {
+    const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=1`, {
+      headers: { 'User-Agent': 'parking-arbitrage/1.0' },
+    })
+    if (!res.ok) return null
+    const c = (await res.json())?.features?.[0]?.geometry?.coordinates
+    if (!Array.isArray(c) || c.length < 2) return null
+    const [lon, lat] = c
+    return (Number.isFinite(lat) && Number.isFinite(lon)) ? { lat, lon } : null
+  } catch { return null }
+}
+
+app.post('/api/venues', async (req, res) => {
+  const name = String(req.body?.name || '').trim()
+  if (!name) return bad(res, 'name is required')
+  if (name.length > 120) return bad(res, 'name is too long')
+  try {
+    const geo = await geocodeVenue(name)
+    if (!geo) {
+      return res.status(422).json({ added: false, name, reason: "couldn't find that venue — check the spelling or include city/state" })
+    }
+    const result = await addVenue(name) // dedupe-checked append to Sheet1 col A
+    if (result.added) {
+      // Non-fatal: makes it visible in the UI immediately; the scrape fills in pricing.
+      try { await upsertVenue(name, geo.lat, geo.lon) } catch (e) { console.error('[engine] upsertVenue (non-fatal):', e.message) }
+    }
+    return res.status(result.added ? 201 : 409).json({ ...result, lat: geo.lat, lon: geo.lon })
   } catch (e) { res.status(500).json({ error: e.message }) }
 })
 
