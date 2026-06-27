@@ -80,6 +80,9 @@ function toDbListing(l) {
     totalPrice:      parseFloat(total.toFixed(2)),
     availableSpaces: typeof l.spaces === 'number' ? l.spaces : null,
     available:       true,
+    // Real per-lot ParkWhiz URL (site_url/external_url) — lets alerts deep-link
+    // straight to this exact lot's booking page. null if the listing had none.
+    bookingUrl:      typeof l.url === 'string' && l.url ? l.url : null,
   }
 }
 

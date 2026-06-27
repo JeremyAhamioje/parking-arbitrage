@@ -155,6 +155,7 @@ export async function insertSnapshots(venueId, listings, eventId = null, source 
     total_price:      l.totalPrice,
     available_spaces: typeof l.availableSpaces === 'number' ? l.availableSpaces : null,
     is_available:     l.available === true || l.available === 'Yes',
+    booking_url:      l.bookingUrl || null, // ParkWhiz per-lot URL; null for SpotHero/Way
   }));
 
   const { error } = await db.from('snapshots').insert(rows);
@@ -397,6 +398,8 @@ export async function generateAlerts(venueId, venueName, listings, opts = {}) {
       facility_name: l.name,
       source,
       context,
+      // Deep link to the exact lot (ParkWhiz only; null for SpotHero/Way).
+      listing_url: l.bookingUrl || l.url || null,
       prev_scraped_at: previous.scraped_at,
       new_scraped_at: current.scraped_at,
     };

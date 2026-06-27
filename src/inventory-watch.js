@@ -35,9 +35,10 @@ const COOLDOWN_HOURS       = parseFloat(process.env.SOLDOUT_COOLDOWN_HOURS || '1
 const PREV_RUN_WINDOW_MIN  = parseFloat(process.env.SOLDOUT_PREV_RUN_WINDOW_MIN || '120') // span of the previous run to pull
 const THINNING_PCT         = parseFloat(process.env.SOLDOUT_THINNING_PCT || '60')        // SpotHero: spaces drop % to warn
 const THINNING_MIN_BASE    = parseInt(process.env.SOLDOUT_THINNING_MIN_BASE || '10', 10)
+const COVERAGE_MIN         = parseFloat(process.env.SOLDOUT_MIN_COVERAGE || '0.5')        // disappearance below this run-over-run lot coverage = likely scrape gap → flag unverified
 
 const PLAT_LABEL = { spothero: 'SpotHero', parkwhiz: 'ParkWhiz', way: 'Way' }
-const SNAP_COLS = 'event_id, facility_id, facility_name, venue_id, is_available, available_spaces, scraped_at'
+const SNAP_COLS = 'event_id, facility_id, facility_name, venue_id, is_available, available_spaces, scraped_at, booking_url'
 
 const daysUntil = d => {
   if (!d) return null
@@ -105,7 +106,7 @@ export async function detectInventoryDrops({ source, sinceMs, dryRun = false }) 
   const eventCache = new Map()
   const getEvent = async id => {
     if (eventCache.has(id)) return eventCache.get(id)
-    const { data } = await db.from('events').select('event_name, event_date').eq('id', id).maybeSingle()
+    const { data } = await db.from('events').select('event_name, event_date, source_url').eq('id', id).maybeSingle()
     eventCache.set(id, data || null)
     return data || null
   }
@@ -151,12 +152,23 @@ export async function detectInventoryDrops({ source, sinceMs, dryRun = false }) 
     }
 
     let created = 0
+    const counts = { confirmed: 0, likely: 0, unverified: 0 }
     for (const eventId of Object.keys(curByEvent)) {
       const prevBatch = prevByEvent[eventId]
       if (!prevBatch?.length) continue // event not in the previous run → no baseline to diff
 
       const curMap = latestPerFacility(curByEvent[eventId])
       const prevMap = latestPerFacility(prevBatch)
+
+      // Run-over-run lot coverage for THIS event. If this run saw far fewer lots
+      // than the previous run, the scrape was probably partial (soft block / gap),
+      // so a lot that "vanished" may not actually be sold out. We DON'T drop those
+      // — a missed real sellout is the costlier error (unfulfillable StubHub order)
+      // — we down-rank them to 'unverified' so the feed says "verify", not "pull".
+      const prevPresent  = Object.keys(prevMap).length
+      const curPresent   = Object.keys(curMap).length
+      const coverage     = prevPresent ? curPresent / prevPresent : 1
+      const underCovered = coverage < COVERAGE_MIN
 
       // --- SOLD OUT: was buyable last run, now gone or unbuyable ---
       for (const [fid, prev] of Object.entries(prevMap)) {
@@ -178,7 +190,19 @@ export async function detectInventoryDrops({ source, sinceMs, dryRun = false }) 
         const venueName = venueMap[venueId] || 'Unknown'
         const lot = prev.facility_name || 'lot'
         const reason = nowGone ? 'delisted (no longer offered)' : 'sold out'
-        const message = `🚫 ${venueName} — ${lot}: SOLD OUT on ${PLAT_LABEL[source] || source} for ${evName} (${evDateStr}${dFrag}). Pull the StubHub listing.`
+        // Confidence: a present-but-unbuyable row (SpotHero count→0 / flag) is a
+        // DIRECT signal = 'confirmed'. A pure disappearance is INFERRED: 'likely'
+        // when the rest of the event scraped fine, 'unverified' when the run looks
+        // partial (possible scrape gap, not a real sellout).
+        const confidence = nowSoldOut ? 'confirmed' : (underCovered ? 'unverified' : 'likely')
+        const plat = PLAT_LABEL[source] || source
+        const head = confidence === 'confirmed' ? '🚫 SOLD OUT'
+                   : confidence === 'likely'    ? '🚫 SOLD OUT (inferred)'
+                   :                              '⚠️ POSSIBLY GONE (unverified)'
+        const action = confidence === 'unverified'
+          ? `Verify on ${plat} before pulling — this run scraped only ${curPresent}/${prevPresent} lots for this event, so it may be a scrape gap, not a sellout.`
+          : 'Pull the StubHub listing.'
+        const message = `${head}: ${venueName} — ${lot} on ${plat} for ${evName} (${evDateStr}${dFrag}). ${action}`
 
         const ok = await fire({
           type: 'availability_drop', // valid alerts.type enum value
@@ -187,7 +211,11 @@ export async function detectInventoryDrops({ source, sinceMs, dryRun = false }) 
           message,
           metadata: {
             venue_name: venueName, facility_name: lot, source,
-            signal_type: 'SOLD_OUT', reason,
+            signal_type: 'SOLD_OUT', reason, confidence,
+            coverage: parseFloat(coverage.toFixed(2)), lots_this_run: curPresent, lots_prev_run: prevPresent,
+            // Deep link: exact lot URL (ParkWhiz) + the event page as a fallback.
+            listing_url: prev.booking_url || curr?.booking_url || null,
+            event_url: ev?.source_url || null,
             event_id: eventId, event_name: evName, event_date: ev?.event_date || null, event_days_until: dLeft,
             spaces_before: prev.available_spaces ?? null,
             spaces_after: curr ? (curr.available_spaces ?? 0) : null,
@@ -195,9 +223,9 @@ export async function detectInventoryDrops({ source, sinceMs, dryRun = false }) 
             context: 'event', category: 'sold_out', // sold-out is always event-context
             prev_scraped_at: prev.scraped_at, new_scraped_at: curr?.scraped_at || sinceIso,
           },
-        }, `🚫 SOLD OUT [${PLAT_LABEL[source] || source}] ${venueName} — ${lot} · ${evName} (${evDateStr})`)
+        }, `${confidence === 'unverified' ? '⚠️' : '🚫'} ${confidence.toUpperCase()} [${plat}] ${venueName} — ${lot} · ${evName} (${evDateStr})`)
         if (!ok) continue
-        onCooldown.add(key); created++
+        onCooldown.add(key); created++; counts[confidence]++
       }
 
       // --- THINNING (SpotHero only): count falling fast but not yet zero ---
@@ -230,7 +258,9 @@ export async function detectInventoryDrops({ source, sinceMs, dryRun = false }) 
             message,
             metadata: {
               venue_name: venueName, facility_name: lot, source,
-              signal_type: 'INVENTORY_THINNING',
+              signal_type: 'INVENTORY_THINNING', confidence: 'confirmed',
+              listing_url: prev.booking_url || curr?.booking_url || null,
+              event_url: ev?.source_url || null,
               event_id: eventId, event_name: evName, event_date: ev?.event_date || null, event_days_until: dLeft,
               spaces_before: pb, spaces_after: ca, spaces_change_pct: parseFloat((-dropPct).toFixed(1)),
               context: 'event', category: 'thinning', // event-context by construction
@@ -238,12 +268,13 @@ export async function detectInventoryDrops({ source, sinceMs, dryRun = false }) 
             },
           }, `⚠️ THINNING [SpotHero] ${venueName} — ${lot} ${pb}→${ca} · ${evName}`)
           if (!ok) continue
-          onCooldown.add(key); created++
+          onCooldown.add(key); created++; counts.confirmed++
         }
       }
     }
 
-    console.log(`  inventory-watch[${source}]: ${created} sold-out/thinning alert(s)${dry ? ' [DRY]' : ''}`)
+    const breakdown = Object.entries(counts).filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(', ')
+    console.log(`  inventory-watch[${source}]: ${created} alert(s)${breakdown ? ` (${breakdown})` : ''}${dry ? ' [DRY]' : ''}`)
     return created
   } catch (e) {
     // Non-fatal — the scrape result matters more than this detector.
