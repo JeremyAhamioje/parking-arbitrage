@@ -102,10 +102,13 @@ function tomorrowWindow() {
 // ---------------------------------------------------------------------------
 // DB writes (mirrors saveListings in scrape-way.js — no Google Sheets for ParkWhiz)
 // ---------------------------------------------------------------------------
-async function saveListings(venue, venueId, listings, eventId = null) {
+async function saveListings(venue, venueId, listings, eventId = null, bookingUrl = null) {
   if (!listings.length) { console.log('  No listings'); return }
 
   const dbListings = listings.map(toDbListing)
+  // ParkWhiz has no reliable per-lot URL, so the caller resolves an event-page
+  // (event-context) or venue-page (generic) link and we stamp it on every row.
+  if (bookingUrl) dbListings.forEach(d => { d.bookingUrl = bookingUrl })
   if (!eventId) {
     console.log(`  ${dbListings.length} listing(s)`)
     dbListings.forEach(l =>
@@ -139,13 +142,14 @@ async function scrapeEventContext(venue, venueId) {
   const distinctDates = new Set(events.map(e => String(e.event_date || '').slice(0, 10))).size
   console.log(`  event-context: ${events.length} event(s) across ${distinctDates} date(s) (≤${EV_PER_VENUE} dates, within ${EV_HORIZON}d)`)
 
-  const byDate = new Map() // date → listings (scrape each day once)
+  const byDate = new Map() // date → { listings, bookingUrl } (scrape each day once)
   for (const ev of events) {
     const date = String(ev.event_date || '').slice(0, 10)
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue
     if (!byDate.has(date)) {
       const win = { startTime: `${date}T18:00:00`, endTime: `${date}T23:00:00` }
       let evListings = []
+      let bookingUrl = null
       try {
         // We just hit this SAME venue for the generic pass; hitting it again
         // immediately can trip the ParkWhiz WAF (single box IP, no proxy rotation
@@ -159,14 +163,21 @@ async function scrapeEventContext(venue, venueId) {
         }
         if (r.status === 'ok') evListings = r.listings
         else console.log(`  ◦ ${date}: status=${r.status}${r.error ? ` — ${r.error}` : ''} (no event rows)`)
+        // Deep link: ParkWhiz's own event page for this date when its event list
+        // exposes one, else the resolved venue page. Per-lot URLs 404, so this is
+        // the most precise link ParkWhiz reliably gives us.
+        const match = (r.events || []).find(e => String(e.start || '').slice(0, 10) === date)
+        bookingUrl = match?.siteUrl ? `https://www.parkwhiz.com${match.siteUrl}`
+                   : r.slug ? `https://www.parkwhiz.com/${r.slug}/`
+                   : null
       } catch (e) { console.log(`  ◦ ${date}: scrape threw — ${e.message}`) }
-      byDate.set(date, evListings)
+      byDate.set(date, { listings: evListings, bookingUrl })
       await _delay(2500)
     }
-    const evListings = byDate.get(date)
-    if (evListings && evListings.length) {
-      console.log(`  ◦ event "${ev.event_name}" (${date}): ${evListings.length} listings`)
-      await saveListings(venue, venueId, evListings, ev.id)
+    const entry = byDate.get(date)
+    if (entry?.listings?.length) {
+      console.log(`  ◦ event "${ev.event_name}" (${date}): ${entry.listings.length} listings`)
+      await saveListings(venue, venueId, entry.listings, ev.id, entry.bookingUrl)
     }
   }
 }
@@ -272,7 +283,8 @@ async function run() {
       continue
     }
 
-    await saveListings(venue, venueId, result.listings)
+    await saveListings(venue, venueId, result.listings, null,
+      result.slug ? `https://www.parkwhiz.com/${result.slug}/` : null)
     stats.ok++
 
     // Event context: per-event-date scrapes tagged with event_id.

@@ -314,6 +314,7 @@ export async function scrapeParkWhiz(address, opts = {}) {
     }
 
     result.listings = listings
+    result.events   = extractEventsFromPageData(pageData) // venue's event list (site_url each)
     result.cheapest = listings.length ? listings[0].price : null
     result.status   = listings.length ? 'ok' : 'no_listings'
 
@@ -357,6 +358,19 @@ export async function scrapeParkWhiz(address, opts = {}) {
  * The lot-level `name` is empty — the real name/address live under pw:location.
  * Prices are already DOLLARS (not cents), so no /100.
  */
+// ParkWhiz embeds the venue's event list in the page state, each event carrying a
+// site_url (its event-parking page). Surface them so the cron can deep-link an
+// event-context alert to ParkWhiz's real event page (the per-lot site_url 404s).
+function extractEventsFromPageData(pd) {
+  const data = pd?.data
+  const arr = (Array.isArray(data?.events) && data.events)
+    || (Array.isArray(data?.props?.pageProps?.events) && data.props.pageProps.events)
+    || []
+  return arr
+    .map(e => ({ name: e.name || e.title || '', start: e.start_time || e.starts || null, siteUrl: e.site_url || null }))
+    .filter(e => e.siteUrl)
+}
+
 export function extractListingsFromPageData({ data }) {
   // Redux SSR puts it at .locations; some Next builds nest it under props.pageProps.
   const locations =
