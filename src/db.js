@@ -247,6 +247,8 @@ export async function upsertFacilityStats(venueId, listings, eventId = null, sou
       facility_name: l.name,
       address: l.address,
       walking_meters: l.walkingMeters || null,
+      booking_url: l.bookingUrl || null, // exact lot (Way) / venue page (ParkWhiz); NULL for SpotHero
+
       latest_price: price,
       prev_price: prevPrice,
       price_delta: parseFloat(priceDelta.toFixed(2)),
@@ -283,9 +285,17 @@ export async function upsertFacilityStats(venueId, listings, eventId = null, sou
     });
   }
 
-  const { error } = await db
+  let { error } = await db
     .from('facility_stats')
     .upsert(upserts, { onConflict: 'venue_id,facility_id,source' });
+  // If booking_url isn't migrated yet, drop it and retry so the rest of the row
+  // (and the downstream price-log + inline alerts) still write. Order-independent.
+  if (error && /booking_url/.test(error.message || '')) {
+    for (const u of upserts) delete u.booking_url;
+    ({ error } = await db
+      .from('facility_stats')
+      .upsert(upserts, { onConflict: 'venue_id,facility_id,source' }));
+  }
   if (error) throw new Error(`upsertFacilityStats failed: ${error.message}`);
 
   return deltas;

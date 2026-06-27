@@ -84,10 +84,19 @@ async function runChangeDetection() {
     const venueMap = Object.fromEntries(venuesArr.map(v => [v.id, v.name]))
     const eventIndex = await buildUpcomingEventIndex()
 
-    const stats = await fetchAll(
-      'facility_stats',
-      'venue_id, facility_id, facility_name, address, source, latest_price, prev_price, price_history, latest_spaces, prev_spaces, last_scraped_at'
-    )
+    const STAT_COLS = 'venue_id, facility_id, facility_name, address, source, latest_price, prev_price, price_history, latest_spaces, prev_spaces, last_scraped_at'
+    // booking_url drives the alert deep link. Tolerate it being un-migrated yet:
+    // fall back to the base columns so the z-score pass still runs (alerts just
+    // won't carry a link until facility-stats-booking-url.sql is applied).
+    let stats
+    try {
+      stats = await fetchAll('facility_stats', `${STAT_COLS}, booking_url`)
+    } catch (e) {
+      if (/booking_url/.test(e.message || '')) {
+        console.warn('  ⚠ facility_stats.booking_url missing — apply facility-stats-booking-url.sql; alerts have no deep link until then.')
+        stats = await fetchAll('facility_stats', STAT_COLS)
+      } else throw e
+    }
     console.log(`Scanning ${stats.length} facility rows for baseline-relative moves\n`)
 
     // One cooldown query: facilities alerted within COOLDOWN_HOURS (any alert
@@ -161,6 +170,9 @@ async function runChangeDetection() {
           source: f.source,
           signal_type: signalType,
           method: 'zscore',
+          // Deep link: exact lot (Way) / venue page (ParkWhiz). NULL for SpotHero
+          // (no per-lot URL) — the API's resolveListingUrl labels it by source.
+          listing_url: f.booking_url || null,
           z_price: zPrice != null && Number.isFinite(zPrice) ? parseFloat(zPrice.toFixed(2)) : null,
           price_before: priceBefore != null ? parseFloat(priceBefore.toFixed(2)) : null,
           price_after: parseFloat(latest.toFixed(2)),
