@@ -155,13 +155,20 @@ export async function discoverDestinationAndEvents(venueName, lat, lon, page = _
   const now = new Date();
   const events = rawEvents
     .filter(e => e.parking_window?.starts && new Date(e.parking_window.starts) > now)
-    .map(e => ({
-      name:      e.title || 'Unknown Event',
-      startsAt:  e.parking_window.starts,
-      endsAt:    e.parking_window.ends,
-      date:      e.starts ? e.starts.slice(0, 10) : null,
-      sourceUrl: e.seo_url ? `https://spothero.com/events/${e.seo_url}` : null,
-    }));
+    .map(e => {
+      // SpotHero's working event-map link is /search?kind=event&id={eventId}; the
+      // /events/{seo_url} path is unreliable, so only fall back to it without an id.
+      const eid = e.event_id ?? e.id ?? null;
+      return {
+        name:      e.title || 'Unknown Event',
+        startsAt:  e.parking_window.starts,
+        endsAt:    e.parking_window.ends,
+        date:      e.starts ? e.starts.slice(0, 10) : null,
+        sourceUrl: eid
+          ? `https://spothero.com/search?kind=event&id=${eid}&hide_event_modal=true&view=dl`
+          : (e.seo_url ? `https://spothero.com/events/${e.seo_url}` : null),
+      };
+    });
 
   return { destinationId: match.id, events };
 }

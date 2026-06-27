@@ -398,8 +398,12 @@ export async function generateAlerts(venueId, venueName, listings, opts = {}) {
       facility_name: l.name,
       source,
       context,
-      // Deep link to the exact lot (ParkWhiz only; null for SpotHero/Way).
+      // Deep link: exact lot (ParkWhiz/Way) when we have one; for event-context
+      // alerts also carry the event name + its page so the feed shows WHICH event
+      // and can offer a "View event" link (SpotHero, which has no per-lot URL).
       listing_url: l.bookingUrl || l.url || null,
+      event_name: opts.eventName || null,
+      event_url: opts.eventUrl || null,
       prev_scraped_at: previous.scraped_at,
       new_scraped_at: current.scraped_at,
     };
