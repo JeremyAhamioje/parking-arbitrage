@@ -53,11 +53,33 @@ async function api(path, { method = 'GET', query, body } = {}) {
   return res.json();
 }
 
-// Reads all venue names from Sheet1 column A (A2 down, skips blank rows)
+// Reads all venue names from Sheet1 column A (A2 down, skips blank rows). The
+// range is generous (not capped at 50) so newly-added venues are picked up
+// automatically on the next scrape — readVenues filters blanks, so an over-wide
+// range costs nothing.
 export async function readVenues() {
-  const data = await api(`/values/${encodeURIComponent('Sheet1!A2:A51')}`);
+  const data = await api(`/values/${encodeURIComponent('Sheet1!A2:A1000')}`);
   const rows = data.values || [];
   return rows.map(r => r[0]).filter(Boolean);
+}
+
+// Appends a venue name to Sheet1 column A if it's not already present (case-
+// insensitive dedupe). Returns { added: boolean, name }. The scrapers pick it up
+// on their next run. Used by the "add venue" flow so a user-entered venue starts
+// being tracked without hand-editing the sheet.
+export async function addVenue(rawName) {
+  const name = String(rawName || '').trim();
+  if (!name) throw new Error('venue name required');
+  const existing = await readVenues();
+  if (existing.some(v => v.toLowerCase() === name.toLowerCase())) {
+    return { added: false, name, reason: 'already tracked' };
+  }
+  await api(`/values/${encodeURIComponent('Sheet1!A:A')}:append`, {
+    method: 'POST',
+    query: { valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' },
+    body: { values: [[name]] },
+  });
+  return { added: true, name };
 }
 
 /**
