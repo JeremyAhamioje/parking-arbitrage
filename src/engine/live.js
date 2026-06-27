@@ -76,6 +76,7 @@ function toRows(env, q) {
     date,
     amenities:    l.amenities || '',
     timestamp:    ts,
+    url:          l.url ?? null, // deep link to the lot/event on the buying platform
   }))
 }
 
