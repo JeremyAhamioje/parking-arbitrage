@@ -66,12 +66,36 @@ async function buildUpcomingEventIndex() {
     .not('event_date', 'is', null)
     .not('ticketmaster_id', 'is', null)
     .limit(4000)
+
+  // SpotHero is the only platform with no per-lot URL — its alerts can only deep-link
+  // to the event MAP (spothero.com/search?kind=event&id=…). The map needs a SpotHero
+  // event_id, which the TM rows above don't carry. So index SpotHero's own event-map
+  // URLs by venue+date. We DON'T use these to correlate (that's still TM-only, above) —
+  // we only ATTACH a map URL when a TM-confirmed event already exists at the SAME
+  // venue+date, so the link lands on the right venue's parking for the right date even
+  // if SpotHero mislabelled the event. date_only on both sides (TM=date, SH=timestamp).
+  const { data: shEvents } = await db
+    .from('events')
+    .select('venue_id, event_date, source_url')
+    .not('event_date', 'is', null)
+    .not('source_url', 'is', null)
+    .ilike('source_url', '%spothero.com%')
+    .limit(4000)
+  const shUrlByVenueDate = {}
+  for (const e of shEvents || []) {
+    const key = `${e.venue_id}|${String(e.event_date).slice(0, 10)}`
+    if (!shUrlByVenueDate[key]) shUrlByVenueDate[key] = e.source_url
+  }
+
   const idx = {}
   for (const e of events || []) {
     const d = daysUntil(e.event_date)
     if (d == null || d < 0 || d > EVENT_HORIZON_DAYS) continue
     const cur = idx[e.venue_id]
-    if (!cur || d < cur.daysUntil) idx[e.venue_id] = { name: e.event_name, date: e.event_date, daysUntil: d }
+    if (!cur || d < cur.daysUntil) {
+      const key = `${e.venue_id}|${String(e.event_date).slice(0, 10)}`
+      idx[e.venue_id] = { name: e.event_name, date: e.event_date, daysUntil: d, spotheroUrl: shUrlByVenueDate[key] || null }
+    }
   }
   return idx
 }
@@ -186,6 +210,10 @@ async function runChangeDetection() {
           event_name: ev?.name || null,
           event_date: ev?.date || null,
           event_days_until: ev?.daysUntil ?? null,
+          // SpotHero event-map for the correlated event. resolveListingUrl only
+          // surfaces it when source=spothero (which has no per-lot listing_url);
+          // for Way/ParkWhiz their own listing_url wins, so this is a no-op there.
+          event_url: ev?.spotheroUrl || null,
           new_scraped_at: f.last_scraped_at, // the "after" run (no exact "before" — z-score over history)
         },
       })
