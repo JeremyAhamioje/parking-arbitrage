@@ -92,6 +92,10 @@ function eventName(s) {
 
 const slugify = c => c.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim().replace(/\s+/g, '-')
 
+// Exact Way reserve page for a lot: /parkingdetails/{listingId}/{slug} (slug cosmetic).
+const wayLotUrl = (id, name) =>
+  id ? `https://www.way.com/parkingdetails/${id}/${String(name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}` : null
+
 // Candidate Way city pageNames to try (the addressDto city → slug isn't always
 // Way's exact page slug, so we fall through a few sensible variants).
 function citySlugs(a) {
@@ -122,6 +126,7 @@ function mapRows(rows) {
       distanceMeters: r.distance != null ? Math.round(parseFloat(r.distance) * 1609.34) : null,
       facilityId:     String(r.listingId ?? ''),
       facilityType:   r.parkingType || '',
+      url:            wayLotUrl(r.listingId, r.listingName), // exact Way lot reserve page
     }
   })
 }

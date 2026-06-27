@@ -34,6 +34,7 @@ function mapListing(l) {
     amenities:      Array.isArray(l.amenities) ? l.amenities.join(', ') : '',
     lat:            l.lat ?? null,
     lng:            l.lng ?? null,
+    url:            l.url || null, // exact ParkWhiz lot page (site_url)
   }
 }
 

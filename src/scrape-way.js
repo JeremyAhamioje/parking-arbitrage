@@ -52,6 +52,14 @@ let runListingCount = 0
 // Map a Way.com listing to the DB snapshot schema (SpotHero-compatible).
 // Way doesn't return available_spaces; service_fee is derived from tax split.
 // ---------------------------------------------------------------------------
+// Way's reserve page for a specific lot is /parkingdetails/{listingId}/{slug}.
+// The slug is cosmetic (the ID alone resolves), so we build it from the lot name.
+function wayListingUrl(lotId, name) {
+  if (!lotId) return null
+  const slug = String(name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+  return `https://www.way.com/parkingdetails/${lotId}/${slug}`
+}
+
 function toDbListing(l) {
   const raw = l.raw || {}
   const addr = raw.address || {}
@@ -75,6 +83,7 @@ function toDbListing(l) {
     totalPrice:      parseFloat(total.toFixed(2)),
     availableSpaces: null,   // Way city-parking/search doesn't return inventory count
     available:       raw.availability !== false,
+    bookingUrl:      wayListingUrl(l.lotId, l.name), // exact Way reserve URL for this lot
   }
 }
 
