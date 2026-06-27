@@ -127,12 +127,19 @@ const SLUG_OVERRIDES = {
 const _slugCache = new Map() // derived slug -> resolved working slug (per process)
 
 // Slug candidates to try, best-known first. opts.slug forces a single candidate.
-function slugCandidates(address, optSlug) {
+// Exported so the live engine's ParkWhiz path (engine/platforms/parkwhiz.js)
+// resolves -N slugs the same way the cron scraper does.
+export function slugCandidates(address, optSlug) {
   if (optSlug) return [optSlug]
   const derived = venueSlug(address)
   const known = _slugCache.get(derived) || SLUG_OVERRIDES[derived]
   if (known) return [known]
   return [derived, `${derived}-2`, `${derived}-3`, `${derived}-4`]
+}
+
+// Record a resolved slug so subsequent calls in this process skip the 404 dance.
+export function rememberSlug(address, slug) {
+  if (slug) _slugCache.set(venueSlug(address), slug)
 }
 
 export async function scrapeParkWhiz(address, opts = {}) {

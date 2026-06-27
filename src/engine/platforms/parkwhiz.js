@@ -13,7 +13,7 @@
 // datacenter proxy pool (PARKWHIZ_PROXY_URLS).
 
 import { launchStealthContext } from '../../scrapers/_stealth.js'
-import { pickProxy, venueSlug, buildSearchUrl, extractListingsFromPageData } from '../../scrapers/parkwhiz.js'
+import { pickProxy, buildSearchUrl, extractListingsFromPageData, slugCandidates, rememberSlug } from '../../scrapers/parkwhiz.js'
 import { bestMatch, THRESHOLDS } from '../match.js'
 import { createPagePool } from '../ctx-pool.js'
 
@@ -102,6 +102,27 @@ function shiftNaive(iso, hours = 0) {
 // Extract a '+/-HH:MM' tz offset from an ISO string, if present.
 const tzOf = iso => (String(iso || '').match(/([+-]\d{2}:\d{2})$/) || [])[1] || null
 
+// Resolve the venue's real ParkWhiz slug by navigating candidates — some venues
+// carry a -N suffix (e.g. state-farm-arena-parking-3), and a wrong slug 404s into
+// an empty __INITIAL_STATE__, which read as "no events". Leaves `page` on the
+// resolved, hydrated venue page and returns the slug (cached for next time), or
+// null if none resolve.
+async function resolveSlug(page, venue) {
+  for (const slug of slugCandidates(venue)) {
+    let status = 0
+    try {
+      const res = await page.goto(`https://www.parkwhiz.com/${slug}/`, { waitUntil: 'commit', timeout: 45000 })
+      status = res?.status() ?? 0
+    } catch { continue }
+    if (status === 404) continue
+    await page.waitForLoadState('domcontentloaded', { timeout: 30000 }).catch(() => {})
+    await page.waitForTimeout(5000)
+    rememberSlug(venue, slug)
+    return slug
+  }
+  return null
+}
+
 // --- public API ------------------------------------------------------------
 
 export async function eventFetch({ venue, event }) {
@@ -109,9 +130,8 @@ export async function eventFetch({ venue, event }) {
   try {
     return await withBrowser(async (page, proxied) => {
       out.venueConfidence = proxied ? 100 : null
-      await page.goto(`https://www.parkwhiz.com/${venueSlug(venue)}/`, { waitUntil: 'commit', timeout: 45000 })
-      await page.waitForLoadState('domcontentloaded', { timeout: 30000 }).catch(() => {})
-      await page.waitForTimeout(5000)
+      const slug = await resolveSlug(page, venue) // handles -N venue slugs (e.g. State Farm Arena)
+      if (!slug) { out.status = 'no_events'; return out }
 
       const events = await readEvents(page)
       if (!events.length) { out.status = 'no_events'; return out }
@@ -134,7 +154,7 @@ export async function eventFetch({ venue, event }) {
       const tz = tzOf(ev.start)
       const start = shiftNaive(ev.start, -1)
       const end = ev.end ? shiftNaive(ev.end, 1) : shiftNaive(ev.start, 5)
-      out.listings = await fetchListings(page, buildSearchUrl(venue, start, end, null, tz))
+      out.listings = await fetchListings(page, buildSearchUrl(venue, start, end, slug, tz))
       out.status = out.listings.length ? 'ok' : 'no_listings'
       return out
     })
@@ -147,7 +167,8 @@ export async function dateFetch({ venue, start, end }) {
     return await withBrowser(async (page, proxied) => {
       out.venueConfidence = proxied ? 100 : null
       // buildSearchUrl slices to 19 chars + appends PARKWHIZ_TZ_OFFSET; daily=1 (daily rate).
-      const url = buildSearchUrl(venue, start, end)
+      // Use the best-known slug (override/cache-aware) so -N venues don't 404.
+      const url = buildSearchUrl(venue, start, end, slugCandidates(venue)[0])
       out.listings = await fetchListings(page, url)
       out.status = out.listings.length ? 'ok' : 'no_listings'
       return out
