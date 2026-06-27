@@ -114,6 +114,27 @@ function toStringArray(val) {
  * @param {string} [opts.proxyUrl]    — override proxy URL for this call
  * @returns {Promise<ScrapeParkWhizResult>}
  */
+// ParkWhiz disambiguates colliding venue slugs with a -N suffix — e.g. State Farm
+// Arena lives at /state-farm-arena-parking-3/, NOT /state-farm-arena-parking/. The
+// derived slug omits that suffix, so such venues 404 and return zero listings even
+// though they exist on ParkWhiz (Way/SpotHero search by lat/lon, so they're fine).
+// Known fixes live here keyed by the DERIVED slug; anything not listed is auto-healed
+// at request time by trying -2/-3/-4 and cached for the rest of the run.
+const SLUG_OVERRIDES = {
+  'state-farm-arena-parking': 'state-farm-arena-parking-3',
+  ...(() => { try { return JSON.parse(process.env.PARKWHIZ_SLUG_OVERRIDES || '{}') } catch { return {} } })(),
+}
+const _slugCache = new Map() // derived slug -> resolved working slug (per process)
+
+// Slug candidates to try, best-known first. opts.slug forces a single candidate.
+function slugCandidates(address, optSlug) {
+  if (optSlug) return [optSlug]
+  const derived = venueSlug(address)
+  const known = _slugCache.get(derived) || SLUG_OVERRIDES[derived]
+  if (known) return [known]
+  return [derived, `${derived}-2`, `${derived}-3`, `${derived}-4`]
+}
+
 export async function scrapeParkWhiz(address, opts = {}) {
   const now   = new Date()
   const plus4 = new Date(now.getTime() + 4 * 60 * 60 * 1000)
@@ -180,26 +201,37 @@ export async function scrapeParkWhiz(address, opts = {}) {
 
   try {
     // ParkWhiz uses venue-slug URLs: /madison-square-garden-parking/?start=...&end=...&daily=1
-    // Times must include a timezone offset (e.g. -04:00 for EDT).
-    const searchUrl = buildSearchUrl(address, startTime, endTime, opts.slug ?? null)
-    console.log(`[parkwhiz] → ${searchUrl}`)
+    // Times must include a timezone offset (e.g. -04:00 for EDT). Some venues need a
+    // -N disambiguation suffix (see SLUG_OVERRIDES) — try candidates until one resolves.
+    const candidates = slugCandidates(address, opts.slug)
+    let httpStatus = 0
+    let usedSlug = null
+    for (const slug of candidates) {
+      const searchUrl = buildSearchUrl(address, startTime, endTime, slug)
+      console.log(`[parkwhiz] → ${searchUrl}`)
+      // 'commit' fires on first byte — doesn't hang on slow proxies like 'domcontentloaded'
+      const navRes = await page.goto(searchUrl, { waitUntil: 'commit', timeout: 45000 })
+      httpStatus = navRes?.status() ?? 0
 
-    // 'commit' fires on first byte — doesn't hang on slow proxies like 'domcontentloaded'
-    const navRes = await page.goto(searchUrl, { waitUntil: 'commit', timeout: 45000 })
-    const httpStatus = navRes?.status() ?? 0
-
-    if (httpStatus === 403) {
-      result.status = 'blocked'
-      result.error = 'HTTP 403 — proxy is blocked or IP is blacklisted'
-      return await finish()
+      if (httpStatus === 403) {
+        result.status = 'blocked'
+        result.error = 'HTTP 403 — proxy is blocked or IP is blacklisted'
+        return await finish()
+      }
+      if (httpStatus !== 404) { usedSlug = slug; break } // 200/redirect → live venue page
+      if (candidates.length > 1) console.log(`[parkwhiz]   404 for "${slug}" — trying next slug candidate`)
     }
 
-    if (httpStatus === 404) {
-      // Slug didn't match — store the derived slug so the caller can override it
+    if (httpStatus === 404 || !usedSlug) {
       result.status = 'slug_not_found'
-      result.error  = `Venue slug not found: ${venueSlug(address)} — pass opts.slug to override`
+      result.error  = `Venue slug not found (tried: ${candidates.join(', ')}) — add to PARKWHIZ_SLUG_OVERRIDES`
       return await finish()
     }
+
+    // Cache the winning slug so the rest of this run (generic pass + each event date)
+    // skips the 404 dance and we don't hammer ParkWhiz's WAF with dead URLs.
+    _slugCache.set(venueSlug(address), usedSlug)
+    result.slug = usedSlug
 
     // commit fires on first byte — wait for DOM to be parsed; non-fatal on slow proxies
     await page.waitForLoadState('domcontentloaded', { timeout: 30000 }).catch(() => {})

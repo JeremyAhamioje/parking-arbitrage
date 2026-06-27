@@ -18,7 +18,7 @@
 
 import 'dotenv/config'
 import { readVenues } from './sheets.js'
-import { scrapeParkWhiz } from './scrapers/parkwhiz.js'
+import { scrapeParkWhiz, venueSlug } from './scrapers/parkwhiz.js'
 import {
   upsertVenue, insertSnapshots, upsertFacilityStats,
   insertFacilityPriceLog, generateAlerts,
@@ -204,7 +204,8 @@ async function run() {
   const win = tomorrowWindow()
   console.log(`Search window: ${win.startTime} → ${win.endTime} (${process.env.PARKWHIZ_TZ_OFFSET || '-04:00'})\n`)
 
-  const stats = { ok: 0, noListings: 0, blocked: 0, error: 0 }
+  const stats = { ok: 0, noListings: 0, slugNotFound: 0, blocked: 0, error: 0 }
+  const slugFails = [] // venues whose ParkWhiz slug couldn't be resolved at all
 
   for (let i = 0; i < venues.length; i++) {
     const venue = venues[i]
@@ -232,6 +233,17 @@ async function run() {
     if (result.status === 'blocked') {
       console.error('  Still WAF-blocked after retry — check proxy pool health.')
       stats.blocked++
+      await _delay(1500)
+      continue
+    }
+
+    // Slug genuinely unresolved (bare + -2/-3/-4 all 404'd) → surface LOUDLY rather
+    // than burying it in no_listings. This is the "silent ParkWhiz gap" class: the
+    // venue exists and Way/SpotHero find it, but our slug is wrong. Needs an override.
+    if (result.status === 'slug_not_found') {
+      console.log(`  ⚠️  SLUG NOT FOUND — ${result.error}`)
+      stats.slugNotFound++
+      slugFails.push(venue)
       await _delay(1500)
       continue
     }
@@ -275,8 +287,15 @@ async function run() {
   await finalizeScrapeRun(currentRunId, { venueCount: venues.length, listingCount: runListingCount })
 
   console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`)
-  console.log(`Done.  ok=${stats.ok}  no_listings=${stats.noListings}  blocked=${stats.blocked}  error=${stats.error}`)
+  console.log(`Done.  ok=${stats.ok}  no_listings=${stats.noListings}  slug_not_found=${stats.slugNotFound}  blocked=${stats.blocked}  error=${stats.error}`)
   console.log(`Total listings written: ${runListingCount}`)
+  if (slugFails.length) {
+    console.log(`\n⚠️  ParkWhiz slug UNRESOLVED for ${slugFails.length} venue(s) — these returned ZERO ParkWhiz data:`)
+    for (const v of slugFails) console.log(`     • ${v}   (derived: ${venueSlug(v)})`)
+    const ex = venueSlug(slugFails[0])
+    console.log(`   Find each venue's real slug on parkwhiz.com and add it to PARKWHIZ_SLUG_OVERRIDES,`)
+    console.log(`   e.g.  PARKWHIZ_SLUG_OVERRIDES='{"${ex}":"${ex}-3"}'`)
+  }
 }
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)) }
