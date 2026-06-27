@@ -80,9 +80,10 @@ function toDbListing(l) {
     totalPrice:      parseFloat(total.toFixed(2)),
     availableSpaces: typeof l.spaces === 'number' ? l.spaces : null,
     available:       true,
-    // Real per-lot ParkWhiz URL (site_url/external_url) — lets alerts deep-link
-    // straight to this exact lot's booking page. null if the listing had none.
-    bookingUrl:      typeof l.url === 'string' && l.url ? l.url : null,
+    // ParkWhiz's per-lot site_url (/p/{city}/{addr}) 404s, and the cron doesn't read
+    // ParkWhiz's event page, so there's no reliable lot link to build here — leave it
+    // null rather than ship a broken alert link. (Way's per-lot URL IS reliable.)
+    bookingUrl:      null,
   }
 }
 

@@ -135,9 +135,11 @@ export async function eventFetch({ venue, event, date }) {
     out.matchedEvent = ev.title
     out.matchedEventDate = ev.date
     out.needsConfirmation = m.confidence < THRESHOLDS.confident
-    // SpotHero has no per-lot URL, so link each row to the event's parking page
-    // (the closest deep link their data allows).
-    const eventUrl = ev.seoUrl ? `https://spothero.com/events/${ev.seoUrl}` : null
+    // SpotHero has no stable per-lot URL, so link each row to the event's parking
+    // MAP (search?kind=event&id={eventId}) — the reliable deep link their data allows.
+    // (The /events/{seo_url} path 404s; the per-pass /purchase/hourly?... link needs
+    // the facility id + session params and is too fragile to construct.)
+    const eventUrl = ev.eventId ? `https://spothero.com/search?kind=event&id=${ev.eventId}&hide_event_modal=true&view=dl` : null
     const listings = await searchTransient(page, {
       lat, lon, starts: ev.starts, ends: ev.ends, eventId: ev.eventId, destinationId,
     })

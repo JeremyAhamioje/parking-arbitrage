@@ -34,7 +34,8 @@ function mapListing(l) {
     amenities:      Array.isArray(l.amenities) ? l.amenities.join(', ') : '',
     lat:            l.lat ?? null,
     lng:            l.lng ?? null,
-    url:            l.url || null, // exact ParkWhiz lot page (site_url)
+    // NB: the per-lot site_url (/p/{city}/{addr}) 404s — eventFetch overrides `url`
+    // with the matched event's page, which is the real bookable ParkWhiz link.
   }
 }
 
@@ -46,7 +47,7 @@ async function readEvents(page) {
     return (window.__INITIAL_STATE__?.events || [])
       .filter(e => { const t = new Date(e.start_time).getTime(); return t > now && t < now + horizon })
       .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
-      .map(e => ({ id: e.id, name: e.name, start: e.start_time, end: e.end_time }))
+      .map(e => ({ id: e.id, name: e.name, start: e.start_time, end: e.end_time, site: e.site_url || null }))
   }, { horizon: HORIZON_MS })
 }
 
@@ -155,7 +156,11 @@ export async function eventFetch({ venue, event }) {
       const tz = tzOf(ev.start)
       const start = shiftNaive(ev.start, -1)
       const end = ev.end ? shiftNaive(ev.end, 1) : shiftNaive(ev.start, 5)
-      out.listings = await fetchListings(page, buildSearchUrl(venue, start, end, slug, tz))
+      const listings = await fetchListings(page, buildSearchUrl(venue, start, end, slug, tz))
+      // The bookable ParkWhiz link is the EVENT page (venue-slug/event-slug-id),
+      // i.e. the event's own site_url — NOT the per-lot /p/ page (which 404s).
+      const eventUrl = ev.site ? (ev.site.startsWith('http') ? ev.site : `https://www.parkwhiz.com${ev.site}`) : null
+      out.listings = eventUrl ? listings.map(l => ({ ...l, url: eventUrl })) : listings
       out.status = out.listings.length ? 'ok' : 'no_listings'
       return out
     })
