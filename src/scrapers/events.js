@@ -69,7 +69,14 @@ export async function getSpotHeroEvents(page, destinationId) {
       const startsAt  = e.parking_window?.starts || e.starts || null;
       const endsAt    = e.parking_window?.ends   || e.ends   || null;
       const date      = e.starts ? e.starts.slice(0, 10) : null;
-      const sourceUrl = e.seo_url ? `https://spothero.com/events/${e.seo_url}` : null;
+      // SpotHero's working event-map link is /search?kind=event&id={eventId}; the
+      // /events/{seo_url} path is unreliable (redirects to a marketing page), so
+      // only fall back to it without an id. Mirrors scrapers/spothero.js — this is
+      // the cached fast-path that actually runs once a venue's dest_id is known.
+      const eid = e.event_id ?? e.id ?? null;
+      const sourceUrl = eid
+        ? `https://spothero.com/search?kind=event&id=${eid}&hide_event_modal=true&view=dl`
+        : (e.seo_url ? `https://spothero.com/events/${e.seo_url}` : null);
 
       return { name, startsAt, endsAt, date, sourceUrl };
     })

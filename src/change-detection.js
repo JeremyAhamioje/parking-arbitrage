@@ -79,7 +79,7 @@ async function buildUpcomingEventIndex() {
     .select('venue_id, event_date, source_url')
     .not('event_date', 'is', null)
     .not('source_url', 'is', null)
-    .ilike('source_url', '%spothero.com%')
+    .ilike('source_url', '%kind=event%') // only the real event-map form, not stale /events//sell-parking redirects
     .limit(4000)
   const shUrlByVenueDate = {}
   for (const e of shEvents || []) {
